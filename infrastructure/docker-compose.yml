@@ -15,5 +15,16 @@ services:
     ports:
       - "6379:6379"
 
+  localstack:
+    image: localstack/localstack:3
+    environment:
+      SERVICES: s3,sqs,sns,secretsmanager
+      DEFAULT_REGION: ap-south-1
+    ports:
+      - "4566:4566"
+    volumes:
+      - localstack_data:/var/lib/localstack
+
 volumes:
   postgres_data:
+  localstack_data:
