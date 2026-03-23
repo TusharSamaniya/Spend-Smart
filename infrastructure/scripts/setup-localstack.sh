@@ -3,7 +3,7 @@
 set -euo pipefail
 
 ENDPOINT_URL="http://localhost:4566"
-REGION="us-east-1"
+REGION="ap-south-1"
 
 echo "Creating S3 bucket: spendsmart-receipts"
 aws --endpoint-url="$ENDPOINT_URL" --region "$REGION" s3api create-bucket \
