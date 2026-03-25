@@ -72,6 +72,71 @@ public class ExpenseService {
                 .toList();
     }
 
+    public ExpenseResponse getById(UUID expenseId, UUID orgId) {
+        Expense expense = expenseRepository.findByIdAndOrgId(expenseId, orgId)
+                .orElseThrow(() -> new ResourceNotFoundException("Expense not found for id: " + expenseId));
+        return mapToResponse(expense);
+    }
+
+    public ExpenseResponse update(UUID expenseId, UUID orgId, CreateExpenseRequest request) {
+        Expense expense = expenseRepository.findByIdAndOrgId(expenseId, orgId)
+                .orElseThrow(() -> new ResourceNotFoundException("Expense not found for id: " + expenseId));
+
+        if (request.getAmount() != null) {
+            expense.setAmount(request.getAmount());
+        }
+
+        if (request.getCurrency() != null) {
+            expense.setCurrency(normalizeCurrency(request.getCurrency()));
+        }
+
+        if (expense.getAmount() != null && expense.getCurrency() != null
+                && (request.getAmount() != null || request.getCurrency() != null)) {
+            BigDecimal fxRate = fxRateService.getRate(expense.getCurrency(), BASE_CURRENCY);
+            BigDecimal amountBase = expense.getAmount()
+                    .multiply(fxRate)
+                    .setScale(2, RoundingMode.HALF_UP);
+            expense.setFxRate(fxRate);
+            expense.setAmountBase(amountBase);
+            expense.setBaseCurrency(BASE_CURRENCY);
+        }
+
+        if (request.getMerchantName() != null) {
+            expense.setMerchantName(request.getMerchantName());
+        }
+
+        if (request.getMerchantVpa() != null) {
+            expense.setMerchantVpa(request.getMerchantVpa());
+        }
+
+        if (request.getPaymentMethod() != null) {
+            expense.setPaymentMethod(Expense.PaymentMethod.valueOf(request.getPaymentMethod().toUpperCase(Locale.ROOT)));
+        }
+
+        if (request.getExpenseDate() != null) {
+            expense.setExpenseDate(request.getExpenseDate());
+        }
+
+        if (request.getNotes() != null) {
+            expense.setNotes(request.getNotes());
+        }
+
+        if (request.getReceiptId() != null) {
+            expense.setReceiptId(request.getReceiptId());
+        }
+
+        if (request.getProjectId() != null) {
+            expense.setProjectId(request.getProjectId());
+        }
+
+        if (request.getTags() != null) {
+            expense.setTags(request.getTags().toArray(String[]::new));
+        }
+
+        Expense updated = expenseRepository.save(expense);
+        return mapToResponse(updated);
+    }
+
     private ExpenseResponse mapToResponse(Expense expense) {
         return ExpenseResponse.builder()
                 .id(expense.getId())
