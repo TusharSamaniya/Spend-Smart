@@ -26,3 +26,5 @@ aws:
 google:
   document-ai:
     project-id: ${GOOGLE_DOCUMENT_AI_PROJECT_ID:}
+    location: ${GOOGLE_DOCUMENT_AI_LOCATION:us}
+    processor-id: ${GOOGLE_DOCUMENT_AI_PROCESSOR_ID:}
