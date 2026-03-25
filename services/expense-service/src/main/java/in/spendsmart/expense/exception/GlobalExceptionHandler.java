@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -34,6 +35,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException exception) {
         ErrorResponse response = new ErrorResponse("ACCESS_DENIED", exception.getMessage(), null);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException exception) {
+        ErrorResponse response = new ErrorResponse("BAD_REQUEST", exception.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundPath(NoResourceFoundException exception) {
+        ErrorResponse response = new ErrorResponse("NOT_FOUND", "Endpoint not found", null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(Exception.class)

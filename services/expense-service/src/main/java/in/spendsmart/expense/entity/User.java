@@ -51,7 +51,7 @@ public class User {
     @Builder.Default
     private Set<String> upiIds = new HashSet<>();
 
-    @Column(name = "default_currency", length = 3)
+    @Column(name = "default_currency", columnDefinition = "char(3)")
     private String defaultCurrency;
 
     @Column(name = "created_at")

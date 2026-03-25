@@ -1,19 +1,17 @@
 server:
-  port: 8081
+  port: 8083
 
 spring:
   application:
     name: expense-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/spendsmart_expense
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:spendsmart_expense}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
   jpa:
+    open-in-view: false
     hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: none
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -23,8 +21,8 @@ spring:
       port: 6379
 
 jwt:
-  secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}
+  secret: myverylonglocalsecretsigninkeyforjwt12345678
+  expiration: 86400000
 
 aws:
   region: ap-south-1

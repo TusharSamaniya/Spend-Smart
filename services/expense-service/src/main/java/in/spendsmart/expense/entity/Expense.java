@@ -42,13 +42,13 @@ public class Expense {
     @Column(name = "amount", precision = 14, scale = 2)
     private BigDecimal amount;
 
-    @Column(name = "currency", length = 3)
+    @Column(name = "currency", columnDefinition = "char(3)")
     private String currency;
 
     @Column(name = "amount_base", precision = 14, scale = 2)
     private BigDecimal amountBase;
 
-    @Column(name = "base_currency", length = 3)
+    @Column(name = "base_currency", columnDefinition = "char(3)")
     private String baseCurrency;
 
     @Column(name = "fx_rate", precision = 18, scale = 6)
