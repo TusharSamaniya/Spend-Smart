@@ -22,6 +22,8 @@ aws:
     bucket-name: ${AWS_S3_BUCKET_NAME:spendsmart-ocr-documents}
   sqs:
     queue-url: ${AWS_SQS_QUEUE_URL:http://localhost:4566/000000000000/ocr-queue}
+  sns:
+    receipt-events-topic-arn: ${AWS_SNS_RECEIPT_EVENTS_TOPIC_ARN:arn:aws:sns:ap-south-1:000000000000:receipt-events}
 
 google:
   document-ai:
