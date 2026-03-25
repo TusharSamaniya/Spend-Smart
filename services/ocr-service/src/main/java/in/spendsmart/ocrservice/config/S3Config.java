@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3ClientBuilder;
+import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner.Builder;
 
@@ -31,7 +32,9 @@ public class S3Config {
     }
 
     private S3ClientBuilder configureS3ClientBuilder() {
-        S3ClientBuilder builder = S3Client.builder().region(Region.of(awsRegion));
+        S3ClientBuilder builder = S3Client.builder()
+                .region(Region.of(awsRegion))
+                .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build());
         if (StringUtils.hasText(endpointUrl)) {
             builder.endpointOverride(URI.create(endpointUrl));
         }
@@ -39,7 +42,9 @@ public class S3Config {
     }
 
     private Builder configureS3PresignerBuilder() {
-        Builder builder = S3Presigner.builder().region(Region.of(awsRegion));
+        Builder builder = S3Presigner.builder()
+                .region(Region.of(awsRegion))
+                .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build());
         if (StringUtils.hasText(endpointUrl)) {
             builder.endpointOverride(URI.create(endpointUrl));
         }

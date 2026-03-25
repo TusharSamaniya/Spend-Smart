@@ -16,6 +16,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "receipts")
@@ -48,6 +50,7 @@ public class Receipt {
     @Column(name = "amount", precision = 14, scale = 2)
     private BigDecimal amount;
 
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "currency", length = 3)
     private String currency;
 
@@ -70,6 +73,7 @@ public class Receipt {
     private String hsnSacCode;
 
     @Column(name = "line_items", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String lineItems;
 
     @Column(name = "confidence_score", precision = 5, scale = 4)
@@ -79,6 +83,7 @@ public class Receipt {
     private UUID duplicateOf;
 
     @Column(name = "raw_ocr", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String rawOcr;
 
     @Column(name = "created_at")
