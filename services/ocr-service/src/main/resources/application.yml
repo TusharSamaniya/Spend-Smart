@@ -1,0 +1,28 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: ocr-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spendsmart_ocr
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+aws:
+  region: ap-south-1
+  endpoint-url: ${AWS_ENDPOINT_URL:http://localhost:4566}
+  s3:
+    bucket-name: ${AWS_S3_BUCKET_NAME:spendsmart-ocr-documents}
+  sqs:
+    queue-url: ${AWS_SQS_QUEUE_URL:http://localhost:4566/000000000000/ocr-queue}
+
+google:
+  document-ai:
+    project-id: ${GOOGLE_DOCUMENT_AI_PROJECT_ID:}
