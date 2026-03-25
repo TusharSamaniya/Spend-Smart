@@ -13,6 +13,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
 
     List<Expense> findByOrgIdAndUserIdOrderByExpenseDateDesc(UUID orgId, UUID userId);
 
+        Optional<Expense> findByIdAndOrgId(UUID id, UUID orgId);
+
     List<Expense> findByOrgIdAndStatusOrderByCreatedAtDesc(UUID orgId, Expense.ExpenseStatus status);
 
     @Query("""
