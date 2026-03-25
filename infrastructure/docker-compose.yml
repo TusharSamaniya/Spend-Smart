@@ -63,6 +63,23 @@ services:
       - redis
       - localstack
 
+  categorization-service:
+    build:
+      context: ../services/categorization-service
+      dockerfile: Dockerfile
+    environment:
+      SQS_QUEUE_URL: http://localstack:4566/000000000000/expense-created
+      SQS_ENDPOINT_URL: http://localstack:4566
+      AWS_REGION: ap-south-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      EXPENSE_SERVICE_URL: http://expense-service:8081
+    ports:
+      - "8083:8083"
+    depends_on:
+      - expense-service
+      - localstack
+
   postgres:
     image: postgres:16-alpine
     environment:
