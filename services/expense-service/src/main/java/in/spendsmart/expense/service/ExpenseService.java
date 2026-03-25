@@ -3,6 +3,7 @@ package in.spendsmart.expense.service;
 import in.spendsmart.expense.dto.CreateExpenseRequest;
 import in.spendsmart.expense.dto.ExpenseResponse;
 import in.spendsmart.expense.entity.Expense;
+import in.spendsmart.expense.event.ExpenseEventPublisher;
 import in.spendsmart.expense.exception.ResourceNotFoundException;
 import in.spendsmart.expense.repository.ExpenseRepository;
 import java.math.BigDecimal;

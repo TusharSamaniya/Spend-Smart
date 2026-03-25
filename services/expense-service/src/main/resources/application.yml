@@ -29,6 +29,8 @@ jwt:
 aws:
   region: ap-south-1
   endpoint-url: ${AWS_ENDPOINT_URL:http://localhost:4566}
+  sqs:
+    queue-url: ${AWS_SQS_QUEUE_URL:http://localhost:4566/000000000000/expense-events}
 
 management:
   endpoints:
