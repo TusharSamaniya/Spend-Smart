@@ -6,5 +6,7 @@ public interface NotificationServiceClient {
 
     void sendApprovalRequest(UUID approverId, Object expense);
 
+    void sendEscalation(UUID originalApproverId, UUID newApproverId, Object expense);
+
     void notifyExpenseRejected(UUID expenseId, String comment);
 }
