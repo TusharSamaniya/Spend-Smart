@@ -37,14 +37,14 @@ public class WorkflowService {
 
     public void onExpenseSubmitted(ExpenseSubmittedEvent event) {
         Optional<WorkflowDefinition> workflowMatch = workflowEvaluator.matchWorkflow(
-                event.getOrgId(),
-                event.getAmount(),
-                event.getCategoryId(),
-                event.getTeamId()
+                event.orgId(),
+                event.amount(),
+                event.categoryId(),
+                event.teamId()
         );
 
         if (workflowMatch.isEmpty()) {
-            expenseServiceClient.updateStatus(event.getExpenseId(), ExpenseStatus.APPROVED);
+            expenseServiceClient.updateStatus(event.expenseId(), ExpenseStatus.APPROVED);
             return;
         }
 
@@ -54,11 +54,11 @@ public class WorkflowService {
                 .orElseThrow(() -> new IllegalStateException("Matched workflow has no steps configured"));
 
         UUID approverId = approverResolver
-                .resolveApprover(firstStep, event.getOrgId(), event.getSubmitterId())
+            .resolveApprover(firstStep, event.orgId(), event.userId())
                 .orElseThrow(() -> new IllegalStateException("Unable to resolve approver for first workflow step"));
 
         ApprovalTask task = createApprovalTask(
-                event.getExpenseId(),
+            event.expenseId(),
                 workflow,
                 firstStep,
                 approverId
@@ -66,7 +66,7 @@ public class WorkflowService {
 
         approvalTaskRepository.save(task);
         notificationServiceClient.sendApprovalRequest(approverId, event);
-        expenseServiceClient.updateStatus(event.getExpenseId(), ExpenseStatus.PENDING_APPROVAL);
+        expenseServiceClient.updateStatus(event.expenseId(), ExpenseStatus.PENDING_APPROVAL);
     }
 
     public void processApprovalAction(UUID taskId, TaskAction action, String comment, UUID actorId) {

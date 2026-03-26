@@ -2,21 +2,15 @@ package in.spendsmart.workflowservice.model;
 
 import java.math.BigDecimal;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ExpenseSubmittedEvent {
-
-    private UUID expenseId;
-    private UUID orgId;
-    private UUID submitterId;
-    private BigDecimal amount;
-    private UUID categoryId;
-    private UUID teamId;
+public record ExpenseSubmittedEvent(
+        UUID expenseId,
+        UUID orgId,
+        UUID userId,
+        BigDecimal amount,
+        String currency,
+        UUID categoryId,
+        UUID teamId,
+        String merchantName
+) {
 }
