@@ -110,6 +110,27 @@ services:
       - expense-service
       - categorization-service
 
+  gst-service:
+    build:
+      context: ../services/gst-service
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: 8085
+      SPRING_APPLICATION_NAME: gst-service
+      GST_DB_URL: jdbc:postgresql://postgres:5432/spendsmart_gst
+      GST_DB_USERNAME: postgres
+      GST_DB_PASSWORD: postgres
+      GST_REDIS_HOST: redis
+      GST_REDIS_PORT: 6379
+      GST_PORTAL_API_URL: http://mock-gst-portal:9090/commonapi
+      GST_PORTAL_API_KEY: test-api-key
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info
+    ports:
+      - "8085:8085"
+    depends_on:
+      - postgres
+      - redis
+
   postgres:
     image: postgres:16-alpine
     environment:
