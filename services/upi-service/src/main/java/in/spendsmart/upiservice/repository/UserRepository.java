@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 
+    @Query(value = "SELECT * FROM users WHERE :upiId = ANY(upi_ids) LIMIT 1", nativeQuery = true)
     Optional<User> findByUpiIdsContaining(String upiId);
 
     @Modifying

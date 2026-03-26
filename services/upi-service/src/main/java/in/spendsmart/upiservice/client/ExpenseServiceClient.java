@@ -4,16 +4,18 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-@RequiredArgsConstructor
 public class ExpenseServiceClient {
 
-    private final @Qualifier("expenseRestClient") RestClient restClient;
+        private final RestClient restClient;
+
+        public ExpenseServiceClient(@Qualifier("expenseRestClient") RestClient restClient) {
+                this.restClient = restClient;
+        }
 
     public UUID createFromUpi(
             UUID orgId,

@@ -80,6 +80,36 @@ services:
       - expense-service
       - localstack
 
+  upi-service:
+    build:
+      context: ../services/upi-service
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: 8084
+      SPRING_APPLICATION_NAME: upi-service
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: spendsmart_expense
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_FLYWAY_ENABLED: "true"
+      SPRING_FLYWAY_LOCATIONS: classpath:db/migration
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      AWS_REGION: ap-south-1
+      AWS_ENDPOINT_URL: http://localstack:4566
+      AWS_SQS_QUEUE_URL: http://localstack:4566/000000000000/upi-events
+      WEBHOOK_SIGNATURE_SECRET: upi-test-secret
+    ports:
+      - "8084:8084"
+    depends_on:
+      - postgres
+      - redis
+      - localstack
+      - expense-service
+      - categorization-service
+
   postgres:
     image: postgres:16-alpine
     environment:
