@@ -10,6 +10,7 @@ import in.spendsmart.upiservice.repository.UpiEventRepository;
 import in.spendsmart.upiservice.service.UserService;
 import in.spendsmart.upiservice.service.VpaResolver;
 import io.awspring.cloud.sqs.annotation.SqsListener;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +51,22 @@ public class UpiEventWorker {
 
             User user = userOptional.get();
             String resolvedMerchant = vpaResolver.resolveMerchant(message.vpaReceiver());
-            String category = categorizationServiceClient.categorize(message, resolvedMerchant);
-            UUID expenseId = expenseServiceClient.createFromUpi(message, user.getId(), resolvedMerchant, category);
+                CategorizationServiceClient.CategoryResult categoryResult = categorizationServiceClient.categorize(
+                    resolvedMerchant,
+                    message.vpaReceiver(),
+                    message.amount(),
+                    "UPI"
+                );
+                LocalDate expenseDate = message.txnTimestamp() == null ? LocalDate.now() : message.txnTimestamp().toLocalDate();
+                UUID expenseId = expenseServiceClient.createFromUpi(
+                    message.orgId(),
+                    user.getId(),
+                    message.amount(),
+                    resolvedMerchant,
+                    message.vpaReceiver(),
+                    expenseDate,
+                    message.upiRefId()
+                );
 
             UpiEvent upiEvent = UpiEvent.builder()
                     .id(UUID.randomUUID())
@@ -66,7 +81,7 @@ public class UpiEventWorker {
                     .resolvedMerchant(resolvedMerchant)
                     .expenseId(expenseId)
                     .source(UpiEvent.UpiSource.WEBHOOK)
-                    .rawPayload(serializeRawPayload(message))
+                    .rawPayload(serializeRawPayload(message, categoryResult))
                     .build();
 
             upiEventRepository.save(upiEvent);
@@ -75,11 +90,14 @@ public class UpiEventWorker {
         }
     }
 
-    private String serializeRawPayload(UpiTransactionMessage message) {
+    private String serializeRawPayload(UpiTransactionMessage message, CategorizationServiceClient.CategoryResult categoryResult) {
         try {
-            return objectMapper.writeValueAsString(message);
+            return objectMapper.writeValueAsString(new EnrichedPayload(message, categoryResult));
         } catch (JsonProcessingException exception) {
             return "{}";
         }
+    }
+
+    private record EnrichedPayload(UpiTransactionMessage message, CategorizationServiceClient.CategoryResult categoryResult) {
     }
 }
