@@ -131,6 +131,36 @@ services:
       - postgres
       - redis
 
+  workflow-service:
+    build:
+      context: ../services/workflow-service
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: 8086
+      SPRING_APPLICATION_NAME: workflow-service
+      DATABASE_URL: jdbc:postgresql://postgres:5432/spendsmart_workflow
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/spendsmart_workflow
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: spendsmart_workflow
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: ${JWT_SECRET}
+      AWS_REGION: ap-south-1
+      AWS_ENDPOINT_URL: http://localstack:4566
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_SQS_EXPENSE_SUBMITTED_QUEUE_URL: http://localstack:4566/000000000000/expense-events
+      AWS_SQS_QUEUE_URL: http://localstack:4566/000000000000/expense-events
+      EXPENSE_SERVICE_URL: http://expense-service:8081
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+    ports:
+      - "8086:8086"
+    depends_on:
+      - expense-service
+      - localstack
+      - postgres
+
   postgres:
     image: postgres:16-alpine
     environment:
