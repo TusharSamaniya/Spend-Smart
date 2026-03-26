@@ -3,12 +3,11 @@ package in.spendsmart.workflowservice.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.spendsmart.workflowservice.client.ExpenseServiceClient;
-import in.spendsmart.workflowservice.client.ExpenseServiceClient.ExpenseStatus;
+import in.spendsmart.workflowservice.client.ExpenseServiceClient.ExpenseDetails;
 import in.spendsmart.workflowservice.client.NotificationServiceClient;
 import in.spendsmart.workflowservice.entity.ApprovalTask;
 import in.spendsmart.workflowservice.entity.ApprovalTask.TaskAction;
 import in.spendsmart.workflowservice.entity.WorkflowDefinition;
-import in.spendsmart.workflowservice.model.ExpenseContext;
 import in.spendsmart.workflowservice.model.ExpenseSubmittedEvent;
 import in.spendsmart.workflowservice.repository.ApprovalTaskRepository;
 import in.spendsmart.workflowservice.repository.WorkflowDefinitionRepository;
@@ -44,7 +43,7 @@ public class WorkflowService {
         );
 
         if (workflowMatch.isEmpty()) {
-            expenseServiceClient.updateStatus(event.expenseId(), ExpenseStatus.APPROVED);
+            expenseServiceClient.updateStatus(event.expenseId(), "APPROVED");
             return;
         }
 
@@ -65,8 +64,8 @@ public class WorkflowService {
         );
 
         approvalTaskRepository.save(task);
-        notificationServiceClient.sendApprovalRequest(approverId, event);
-        expenseServiceClient.updateStatus(event.expenseId(), ExpenseStatus.PENDING_APPROVAL);
+        notificationServiceClient.sendApprovalRequest(approverId, event.expenseId());
+        expenseServiceClient.updateStatus(event.expenseId(), "PENDING_APPROVAL");
     }
 
     public void processApprovalAction(UUID taskId, TaskAction action, String comment, UUID actorId) {
@@ -83,8 +82,9 @@ public class WorkflowService {
         approvalTaskRepository.save(task);
 
         if (action == TaskAction.REJECTED) {
-            expenseServiceClient.updateStatus(task.getExpenseId(), ExpenseStatus.REJECTED);
-            notificationServiceClient.notifyExpenseRejected(task.getExpenseId(), comment);
+            expenseServiceClient.updateStatus(task.getExpenseId(), "REJECTED");
+            ExpenseDetails expenseDetails = expenseServiceClient.getExpenseDetails(task.getExpenseId());
+            notificationServiceClient.sendRejectionNotice(expenseDetails.userId(), task.getExpenseId(), comment);
             return;
         }
 
@@ -102,20 +102,19 @@ public class WorkflowService {
                 .findFirst();
 
         if (nextStep.isEmpty()) {
-            expenseServiceClient.updateStatus(task.getExpenseId(), ExpenseStatus.APPROVED);
+            expenseServiceClient.updateStatus(task.getExpenseId(), "APPROVED");
             return;
         }
 
-        ExpenseContext expenseContext = expenseServiceClient.getExpenseContext(task.getExpenseId())
-                .orElseThrow(() -> new IllegalStateException("Expense context not found for next-step resolution"));
+        ExpenseDetails expenseDetails = expenseServiceClient.getExpenseDetails(task.getExpenseId());
 
         UUID nextApproverId = approverResolver
-                .resolveApprover(nextStep.get(), expenseContext.getOrgId(), expenseContext.getSubmitterId())
+            .resolveApprover(nextStep.get(), expenseDetails.orgId(), expenseDetails.userId())
                 .orElseThrow(() -> new IllegalStateException("Unable to resolve approver for next workflow step"));
 
         ApprovalTask nextTask = createApprovalTask(task.getExpenseId(), workflow, nextStep.get(), nextApproverId);
         approvalTaskRepository.save(nextTask);
-        notificationServiceClient.sendApprovalRequest(nextApproverId, expenseContext);
+        notificationServiceClient.sendApprovalRequest(nextApproverId, task.getExpenseId());
     }
 
     private ApprovalTask createApprovalTask(UUID expenseId, WorkflowDefinition workflow, WorkflowStep step, UUID approverId) {

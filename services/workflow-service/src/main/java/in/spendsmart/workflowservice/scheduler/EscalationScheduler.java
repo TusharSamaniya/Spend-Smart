@@ -2,12 +2,12 @@ package in.spendsmart.workflowservice.scheduler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import in.spendsmart.workflowservice.client.ExpenseServiceClient.ExpenseDetails;
 import in.spendsmart.workflowservice.client.ExpenseServiceClient;
 import in.spendsmart.workflowservice.client.NotificationServiceClient;
 import in.spendsmart.workflowservice.entity.ApprovalTask;
 import in.spendsmart.workflowservice.entity.ApprovalTask.TaskAction;
 import in.spendsmart.workflowservice.entity.WorkflowDefinition;
-import in.spendsmart.workflowservice.model.ExpenseContext;
 import in.spendsmart.workflowservice.repository.ApprovalTaskRepository;
 import in.spendsmart.workflowservice.repository.WorkflowDefinitionRepository;
 import in.spendsmart.workflowservice.service.ApproverResolver;
@@ -73,11 +73,10 @@ public class EscalationScheduler {
             return;
         }
 
-        ExpenseContext expenseContext = expenseServiceClient.getExpenseContext(task.getExpenseId())
-                .orElseThrow(() -> new IllegalStateException("Expense context not found for expense " + task.getExpenseId()));
+        ExpenseDetails expenseDetails = expenseServiceClient.getExpenseDetails(task.getExpenseId());
 
         UUID nextApproverId = approverResolver
-                .resolveApprover(nextStep.get(), expenseContext.getOrgId(), expenseContext.getSubmitterId())
+            .resolveApprover(nextStep.get(), expenseDetails.orgId(), expenseDetails.userId())
                 .orElseThrow(() -> new IllegalStateException("Unable to resolve next approver for expense " + task.getExpenseId()));
 
         int escalationHours = workflow.getEscalationHours() != null ? workflow.getEscalationHours() : 48;
@@ -91,7 +90,7 @@ public class EscalationScheduler {
                 .build();
 
         approvalTaskRepository.save(escalatedTask);
-        notificationServiceClient.sendEscalation(task.getApproverId(), nextApproverId, expenseContext);
+        notificationServiceClient.sendEscalation(task.getApproverId(), nextApproverId, task.getExpenseId());
 
         log.info(
                 "Escalated expense {} from approver {} to approver {}",
