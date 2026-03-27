@@ -191,6 +191,30 @@ services:
       - redis
       - localstack
 
+  notification-service:
+    build:
+      context: ../services/notification-service
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: 8088
+      SPRING_APPLICATION_NAME: notification-service
+      SMTP_PASS: ${SMTP_PASS}
+      NOTIFICATION_FROM_EMAIL: ${NOTIFICATION_FROM_EMAIL}
+      DASHBOARD_BASE_URL: ${DASHBOARD_BASE_URL:-http://localhost:3000}
+      WHATSAPP_TOKEN: ${WHATSAPP_TOKEN}
+      WHATSAPP_PHONE_ID: ${WHATSAPP_PHONE_ID}
+      FIREBASE_CREDENTIALS_PATH: ${FIREBASE_CREDENTIALS_PATH}
+      AWS_SQS_NOTIFICATIONS_QUEUE_URL: ${AWS_SQS_NOTIFICATIONS_QUEUE_URL}
+      AWS_REGION: ${AWS_REGION:-ap-south-1}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://localstack:4566}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-test}
+    ports:
+      - "8088:8088"
+    depends_on:
+      - localstack
+      - expense-service
+
   postgres:
     image: postgres:16-alpine
     environment:

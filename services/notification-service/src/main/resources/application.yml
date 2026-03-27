@@ -16,6 +16,11 @@ spring:
           starttls:
             enable: true
 
+management:
+  health:
+    mail:
+      enabled: false
+
 notification:
   from-email: ${NOTIFICATION_FROM_EMAIL:}
   dashboard-base-url: ${DASHBOARD_BASE_URL:http://localhost:3000}
