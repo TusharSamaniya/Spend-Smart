@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +75,25 @@ public class BudgetService {
         return budgetUtilizationRepository.findByBudgetId(budgetId)
                 .map(BudgetUtilization::getPctUsed)
                 .orElse(BigDecimal.ZERO);
+    }
+
+    public List<Budget> listActiveBudgets(UUID orgId) {
+        if (orgId == null) {
+            throw new IllegalArgumentException("orgId is required");
+        }
+        return budgetRepository.findActiveByOrgId(orgId, LocalDate.now());
+    }
+
+    public Budget deactivateBudget(UUID budgetId, UUID orgId) {
+        if (budgetId == null || orgId == null) {
+            throw new IllegalArgumentException("budgetId and orgId are required");
+        }
+
+        Budget budget = budgetRepository.findByIdAndOrgId(budgetId, orgId)
+                .orElseThrow(() -> new NoSuchElementException("Budget not found for org"));
+
+        budget.setEndDate(LocalDate.now().minusDays(1));
+        return budgetRepository.save(budget);
     }
 
     public void checkBudgetAlerts() {
