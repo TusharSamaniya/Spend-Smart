@@ -1,0 +1,31 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: notification-service
+  mail:
+    host: smtp.sendgrid.net
+    port: 587
+    username: apikey
+    password: ${SMTP_PASS:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+notification:
+  from-email: ${NOTIFICATION_FROM_EMAIL:}
+
+aws:
+  sqs:
+    notifications-queue-url: ${AWS_SQS_NOTIFICATIONS_QUEUE_URL:}
+
+whatsapp:
+  token: ${WHATSAPP_TOKEN:}
+  phone-id: ${WHATSAPP_PHONE_ID:}
+
+firebase:
+  credentials-path: ${FIREBASE_CREDENTIALS_PATH:}
