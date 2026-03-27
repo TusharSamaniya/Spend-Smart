@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>UPI Expense Captured</title>
+</head>
+<body style="margin:0;background:#f3f6fb;font-family:Arial,sans-serif;color:#1f2937;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+          <tr>
+            <td style="background:#0f172a;padding:16px 24px;color:#ffffff;font-size:20px;font-weight:700;">SpendSmart</td>
+          </tr>
+          <tr>
+            <td style="padding:24px;">
+              <h2 style="margin:0 0 12px 0;">UPI Expense Auto-Captured</h2>
+              <p style="margin:0 0 14px 0;">We captured an expense from your UPI activity.</p>
+              <table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;border:1px solid #e5e7eb;">
+                <tr>
+                  <td style="width:180px;background:#f9fafb;font-weight:600;border-bottom:1px solid #e5e7eb;">Amount</td>
+                  <td style="border-bottom:1px solid #e5e7eb;">{amount}</td>
+                </tr>
+                <tr>
+                  <td style="background:#f9fafb;font-weight:600;">Merchant</td>
+                  <td>{merchantName}</td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px;">
+                <tr>
+                  <td>
+                    <a href="{confirmUrl}" style="display:inline-block;background:#0f9d58;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:600;">Confirm</a>
+                  </td>
+                  <td style="width:10px;"></td>
+                  <td>
+                    <a href="{dismissUrl}" style="display:inline-block;background:#d93025;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:600;">Dismiss</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

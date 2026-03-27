@@ -158,8 +158,8 @@ public class NotificationWorker {
         String topCategory = asString(payload, "category", "General");
 
         if (channels.contains(Channel.EMAIL) && hasText(contactInfo.email())) {
-            String body = "<p>UPI expense captured: <strong>" + amount + "</strong> at " + merchantName + ".</p>";
-            emailService.sendEmail(contactInfo.email(), "UPI expense captured", body);
+            UUID expenseId = asUuid(payload, "expenseId", UUID.randomUUID());
+            emailService.sendUpiCaptureNotice(contactInfo.email(), amount, merchantName, expenseId);
         }
         if (channels.contains(Channel.WHATSAPP) && hasText(contactInfo.phone())) {
             whatsAppService.sendDailySpendSummary(contactInfo.phone(), amount, topCategory);
