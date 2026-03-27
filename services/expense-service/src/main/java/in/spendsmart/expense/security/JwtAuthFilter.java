@@ -38,15 +38,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(BEARER_PREFIX.length());
 
-        if (!jwtUtil.validateToken(token)) {
+        if (!jwtUtil.validateToken(token) || jwtUtil.isRefreshToken(token)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         Claims claims = jwtUtil.extractClaims(token);
+        String userId = claims.get("userId", String.class) != null
+            ? claims.get("userId", String.class)
+            : claims.get("user_id", String.class);
+        String orgId = claims.get("orgId", String.class) != null
+            ? claims.get("orgId", String.class)
+            : claims.get("org_id", String.class);
         CurrentUser currentUser = new CurrentUser(
-                UUID.fromString(claims.get("userId", String.class)),
-                UUID.fromString(claims.get("orgId", String.class)),
+            UUID.fromString(userId),
+            UUID.fromString(orgId),
                 claims.getSubject(),
                 claims.get("role", String.class)
         );

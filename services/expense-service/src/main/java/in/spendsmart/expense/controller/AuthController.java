@@ -28,8 +28,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        String token = authService.login(request.email(), request.password());
-        return ResponseEntity.ok(new LoginResponse(token));
+        AuthService.TokenPair tokens = authService.login(request.email(), request.password());
+        return ResponseEntity.ok(new LoginResponse(tokens.accessToken(), tokens.refreshToken()));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshResponse> refresh(@Valid @RequestBody RefreshRequest request) {
+        String accessToken = authService.refreshAccessToken(request.refreshToken());
+        return ResponseEntity.ok(new RefreshResponse(accessToken));
     }
 
     public record RegisterRequest(
@@ -48,6 +54,14 @@ public class AuthController {
     ) {
     }
 
-    public record LoginResponse(String token) {
+    public record LoginResponse(String accessToken, String refreshToken) {
+    }
+
+    public record RefreshRequest(
+            @NotBlank String refreshToken
+    ) {
+    }
+
+    public record RefreshResponse(String accessToken) {
     }
 }
