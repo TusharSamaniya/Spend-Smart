@@ -161,6 +161,36 @@ services:
       - localstack
       - postgres
 
+  analytics-service:
+    build:
+      context: ../services/analytics-service
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: 8087
+      SPRING_APPLICATION_NAME: analytics-service
+      DATABASE_URL: jdbc:postgresql://postgres:5432/spendsmart_expense
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/spendsmart_expense
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: spendsmart_expense
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      AWS_REGION: ap-south-1
+      AWS_ENDPOINT_URL: http://localstack:4566
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_SNS_EXPENSE_EVENTS_TOPIC_ARN: arn:aws:sns:ap-south-1:000000000000:expense-events
+      AWS_SNS_ANOMALY_ALERT_TOPIC_ARN: arn:aws:sns:ap-south-1:000000000000:anomaly-alerts
+    ports:
+      - "8087:8087"
+    depends_on:
+      - expense-service
+      - postgres
+      - redis
+      - localstack
+
   postgres:
     image: postgres:16-alpine
     environment:
