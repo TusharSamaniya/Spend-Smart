@@ -16,42 +16,101 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: auth-route
+          uri: ${EXPENSE_SERVICE_URL:http://expense-service:8081}
+          predicates:
+            - Path=/v1/auth/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                key-resolver: "#{@userKeyResolver}"
+
         - id: expense-service
           uri: ${EXPENSE_SERVICE_URL:http://expense-service:8081}
           predicates:
-            - Path=/v1/expenses/**,/v1/auth/**
+            - Path=/v1/expenses/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 50
+                redis-rate-limiter.burstCapacity: 100
+                key-resolver: "#{@userKeyResolver}"
 
         - id: ocr-service
           uri: ${OCR_SERVICE_URL:http://ocr-service:8082}
           predicates:
             - Path=/v1/receipts/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 40
+                redis-rate-limiter.burstCapacity: 80
+                key-resolver: "#{@userKeyResolver}"
 
         - id: categorization-service
           uri: ${CATEGORIZATION_SERVICE_URL:http://categorization-service:8083}
           predicates:
             - Path=/v1/categorize/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100
+                redis-rate-limiter.burstCapacity: 200
+                key-resolver: "#{@userKeyResolver}"
 
         - id: upi-service
           uri: ${UPI_SERVICE_URL:http://upi-service:8084}
           predicates:
             - Path=/v1/upi/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 40
+                redis-rate-limiter.burstCapacity: 80
+                key-resolver: "#{@userKeyResolver}"
 
         - id: gst-service
           uri: ${GST_SERVICE_URL:http://gst-service:8085}
           predicates:
             - Path=/v1/gst/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 40
+                redis-rate-limiter.burstCapacity: 80
+                key-resolver: "#{@userKeyResolver}"
 
         - id: workflow-service
           uri: ${WORKFLOW_SERVICE_URL:http://workflow-service:8086}
           predicates:
             - Path=/v1/approvals/**,/v1/workflows/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 40
+                redis-rate-limiter.burstCapacity: 80
+                key-resolver: "#{@userKeyResolver}"
 
         - id: analytics-service
           uri: ${ANALYTICS_SERVICE_URL:http://analytics-service:8087}
           predicates:
             - Path=/v1/analytics/**,/v1/budgets/**,/v1/export/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 30
+                redis-rate-limiter.burstCapacity: 60
+                key-resolver: "#{@userKeyResolver}"
 
         - id: notification-service
           uri: ${NOTIFICATION_SERVICE_URL:http://notification-service:8088}
           predicates:
             - Path=/v1/notifications/**,/v1/webhooks/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 40
+                redis-rate-limiter.burstCapacity: 80
+                key-resolver: "#{@userKeyResolver}"
