@@ -54,6 +54,9 @@ public class User {
     @Column(name = "default_currency", columnDefinition = "char(3)")
     private String defaultCurrency;
 
+    @Column(name = "device_token", length = 512)
+    private String deviceToken;
+
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 

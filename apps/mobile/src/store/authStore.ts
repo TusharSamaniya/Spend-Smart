@@ -15,16 +15,19 @@ export type AuthUser = {
 type AuthState = {
   accessToken: string | null;
   refreshToken: string | null;
+  expoPushToken: string | null;
   user: AuthUser | null;
   isAuthenticated: boolean;
   login: (accessToken: string, refreshToken: string, user: AuthUser) => Promise<void>;
   logout: () => Promise<void>;
   loadStoredAuth: () => Promise<void>;
+  setExpoPushToken: (token: string | null) => void;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   refreshToken: null,
+  expoPushToken: null,
   user: null,
   isAuthenticated: false,
 
@@ -53,6 +56,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({
       accessToken: null,
       refreshToken: null,
+      expoPushToken: null,
       user: null,
       isAuthenticated: false,
     });
@@ -83,5 +87,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       user,
       isAuthenticated,
     });
+  },
+
+  setExpoPushToken: (token) => {
+    set({ expoPushToken: token });
   },
 }));

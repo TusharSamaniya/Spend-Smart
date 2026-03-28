@@ -1,10 +1,12 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { Provider as PaperProvider } from 'react-native-paper';
 import type { ComponentProps } from 'react';
+import UpiCaptureToast from '../components/UpiCaptureToast';
+import usePushNotifications from '../hooks/usePushNotifications';
 import ApprovalsScreen from '../screens/ApprovalsScreen';
 import AddExpenseScreen from '../screens/AddExpenseScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -29,7 +31,10 @@ type MainTabParamList = {
 };
 
 type MainStackParamList = {
-  MainTabs: undefined;
+  MainTabs: {
+    screen?: keyof MainTabParamList;
+    params?: Record<string, unknown>;
+  } | undefined;
 };
 
 type PendingApprovalsResponse =
@@ -40,6 +45,7 @@ type PendingApprovalsResponse =
     };
 
 const queryClient = new QueryClient();
+const navigationRef = createNavigationContainerRef();
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const MainStack = createNativeStackNavigator<MainStackParamList>();
@@ -126,12 +132,61 @@ function MainStackNavigator() {
 
 export default function AppNavigator() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { foregroundExpense, dismissForegroundExpense } = usePushNotifications({
+    navigationRef,
+  });
+
+  const handleViewNotificationDetails = (expense: {
+    amount: number;
+    currency?: string;
+    merchantName: string;
+    paymentMethod?: string;
+    expenseDate?: string;
+    categoryId?: string;
+    notes?: string;
+    tags?: string[];
+  }) => {
+    if (!navigationRef.isReady()) {
+      return;
+    }
+
+    const navigate = navigationRef.navigate as unknown as (
+      routeName: string,
+      params?: Record<string, unknown>,
+    ) => void;
+
+    navigate('MainTabs', {
+      screen: 'Add',
+      params: {
+        prefill: {
+          amount: String(expense.amount ?? ''),
+          currency: expense.currency ?? 'INR',
+          merchantName: expense.merchantName ?? '',
+          paymentMethod: expense.paymentMethod ?? 'UPI',
+          expenseDate: expense.expenseDate ?? '',
+          categoryId: expense.categoryId ?? '',
+          notes: expense.notes ?? '',
+          tags: expense.tags ?? [],
+        },
+      },
+    });
+
+    dismissForegroundExpense();
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
       <PaperProvider>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           {isAuthenticated ? <MainStackNavigator /> : <AuthStackNavigator />}
+
+          {isAuthenticated && foregroundExpense ? (
+            <UpiCaptureToast
+              expense={foregroundExpense}
+              onViewDetails={handleViewNotificationDetails}
+              onDismiss={dismissForegroundExpense}
+            />
+          ) : null}
         </NavigationContainer>
       </PaperProvider>
     </QueryClientProvider>
