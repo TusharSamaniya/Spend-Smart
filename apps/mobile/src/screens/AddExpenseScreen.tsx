@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import {
   Button,
@@ -38,6 +38,17 @@ type CategoryResponse =
       categories?: RawCategory[];
     };
 
+type AddExpensePrefill = {
+  amount?: string;
+  currency?: string;
+  merchantName?: string;
+  paymentMethod?: string;
+  expenseDate?: string;
+  categoryId?: string;
+  notes?: string;
+  tags?: string[] | string;
+};
+
 const defaultDate = new Date().toISOString().slice(0, 10);
 
 const expenseSchema = z.object({
@@ -64,10 +75,13 @@ const formatDate = (date: Date) => date.toISOString().slice(0, 10);
 
 export default function AddExpenseScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
   const [showCurrencyMenu, setShowCurrencyMenu] = useState(false);
   const [showCategoryMenu, setShowCategoryMenu] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const params = route.params as { prefill?: AddExpensePrefill } | undefined;
 
   const {
     control,
@@ -141,6 +155,40 @@ export default function AddExpenseScreen() {
       },
     });
   };
+
+  useEffect(() => {
+    const prefill = params?.prefill;
+
+    if (!prefill) {
+      return;
+    }
+
+    const normalizedCurrency = currencyOptions.includes(prefill.currency as CurrencyCode)
+      ? (prefill.currency as CurrencyCode)
+      : 'INR';
+
+    const normalizedPaymentMethod: PaymentMethod =
+      prefill.paymentMethod === 'Card' ||
+      prefill.paymentMethod === 'Cash' ||
+      prefill.paymentMethod === 'NEFT'
+        ? prefill.paymentMethod
+        : 'UPI';
+
+    const normalizedTags = Array.isArray(prefill.tags)
+      ? prefill.tags.join(', ')
+      : (prefill.tags ?? '');
+
+    reset({
+      amount: prefill.amount ?? '',
+      currency: normalizedCurrency,
+      merchantName: prefill.merchantName ?? '',
+      paymentMethod: normalizedPaymentMethod,
+      expenseDate: prefill.expenseDate || formatDate(new Date()),
+      categoryId: prefill.categoryId ?? '',
+      notes: prefill.notes ?? '',
+      tags: normalizedTags,
+    });
+  }, [params?.prefill, reset]);
 
   const onSubmit: SubmitHandler<ExpenseFormValues> = async (values) => {
     setSubmitError(null);
