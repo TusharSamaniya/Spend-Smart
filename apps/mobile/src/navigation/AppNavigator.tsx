@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { Provider as PaperProvider } from 'react-native-paper';
 import type { ComponentProps } from 'react';
 import ApprovalsScreen from '../screens/ApprovalsScreen';
@@ -12,6 +12,7 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ScanReceiptScreen from '../screens/ScanReceiptScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import { apiClient } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 
 type AuthStackParamList = {
@@ -30,6 +31,13 @@ type MainTabParamList = {
 type MainStackParamList = {
   MainTabs: undefined;
 };
+
+type PendingApprovalsResponse =
+  | Array<{ id?: string; approvalId?: string }>
+  | {
+      items?: Array<{ id?: string; approvalId?: string }>;
+      approvals?: Array<{ id?: string; approvalId?: string }>;
+    };
 
 const queryClient = new QueryClient();
 
@@ -52,6 +60,26 @@ function AuthStackNavigator() {
 }
 
 function MainTabNavigator() {
+  const role = useAuthStore((state) => state.user?.role?.toLowerCase() ?? 'employee');
+  const isApprover = role === 'manager' || role === 'admin';
+
+  const pendingApprovalsQuery = useQuery({
+    queryKey: ['pending-approvals'],
+    queryFn: async () => {
+      const response = await apiClient.get<PendingApprovalsResponse>('/v1/approvals/pending');
+      const payload = response.data;
+      const items = Array.isArray(payload)
+        ? payload
+        : (payload.items ?? payload.approvals ?? []);
+
+      return items.length;
+    },
+    enabled: isApprover,
+    refetchInterval: 30000,
+  });
+
+  const pendingCount = pendingApprovalsQuery.data ?? 0;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -74,7 +102,11 @@ function MainTabNavigator() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Add" component={AddExpenseScreen} />
       <Tab.Screen name="Scan" component={ScanReceiptScreen} />
-      <Tab.Screen name="Approvals" component={ApprovalsScreen} />
+      <Tab.Screen
+        name="Approvals"
+        component={ApprovalsScreen}
+        options={{ tabBarBadge: pendingCount > 0 ? pendingCount : undefined }}
+      />
       <Tab.Screen name="Profile" component={SettingsScreen} />
     </Tab.Navigator>
   );
