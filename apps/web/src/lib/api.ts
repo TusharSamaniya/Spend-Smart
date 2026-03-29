@@ -21,6 +21,21 @@ const clearToken = (): void => {
   localStorage.removeItem("accessToken");
 };
 
+const getRefreshToken = (): string | null =>
+  typeof window === "undefined"
+    ? null
+    : localStorage.getItem("refreshToken");
+
+const setRefreshToken = (token: string): void => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("refreshToken", token);
+};
+
+const clearRefreshToken = (): void => {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem("refreshToken");
+};
+
 api.interceptors.request.use((config) => {
   const token = getToken();
 
@@ -33,9 +48,10 @@ api.interceptors.request.use((config) => {
 
 async function refreshAccessToken(): Promise<string | null> {
   try {
+    const refreshToken = getRefreshToken();
     const response = await axios.post<{ accessToken: string }>(
       `${baseURL}/v1/auth/refresh`,
-      {},
+      refreshToken ? { refreshToken } : {},
       {
         // withCredentials allows cookies-based refresh flows to work when applicable.
         withCredentials: true,
@@ -46,6 +62,9 @@ async function refreshAccessToken(): Promise<string | null> {
 
     if (newToken) {
       setToken(newToken);
+      if (refreshToken) {
+        setRefreshToken(refreshToken);
+      }
       return newToken;
     }
 
@@ -83,3 +102,4 @@ api.interceptors.response.use(
 );
 
 export { api, getToken, setToken, clearToken };
+export { getRefreshToken, setRefreshToken, clearRefreshToken };

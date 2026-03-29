@@ -11,7 +11,13 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 
-import { clearToken, getToken, setToken } from "./api";
+import {
+  clearRefreshToken,
+  clearToken,
+  getToken,
+  setRefreshToken,
+  setToken,
+} from "./api";
 
 type User = {
   userId: string;
@@ -23,7 +29,8 @@ type User = {
 type AuthContextValue = {
   user: User | null;
   isAuthenticated: boolean;
-  login: (token: string) => void;
+  isReady: boolean;
+  login: (token: string, refreshToken?: string, userOverride?: User | null) => void;
   logout: () => void;
 };
 
@@ -71,9 +78,11 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   const logout = useCallback(() => {
     clearToken();
+    clearRefreshToken();
     setUser(null);
     setIsAuthenticated(false);
     router.push("/login");
@@ -83,22 +92,25 @@ function AuthProvider({ children }: { children: ReactNode }) {
     const token = getToken();
     if (!token) {
       setIsAuthenticated(false);
+      setIsReady(true);
       return;
     }
 
     const payload = parseJwt(token);
     if (!payload || isExpired(payload)) {
       logout();
+      setIsReady(true);
       return;
     }
 
     const nextUser = payloadToUser(payload);
     setUser(nextUser);
     setIsAuthenticated(true);
+    setIsReady(true);
   }, [logout]);
 
   const login = useCallback(
-    (token: string) => {
+    (token: string, refreshToken?: string, userOverride?: User | null) => {
       const payload = parseJwt(token);
 
       if (!payload || isExpired(payload)) {
@@ -107,9 +119,13 @@ function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       setToken(token);
-      const nextUser = payloadToUser(payload);
+      if (refreshToken) {
+        setRefreshToken(refreshToken);
+      }
+      const nextUser = userOverride ?? payloadToUser(payload);
       setUser(nextUser);
       setIsAuthenticated(true);
+      setIsReady(true);
     },
     [logout]
   );
@@ -124,8 +140,9 @@ function AuthProvider({ children }: { children: ReactNode }) {
       isAuthenticated,
       login,
       logout,
+      isReady,
     }),
-    [isAuthenticated, login, logout, user]
+    [isAuthenticated, isReady, login, logout, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
