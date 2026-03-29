@@ -9,6 +9,7 @@ import io.jsonwebtoken.Claims;
 import java.util.Locale;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -27,6 +29,8 @@ public class AuthService {
     @Transactional
     public TokenPair register(String name, String email, String password, String organizationName) {
         String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
+        log.info("Register attempt for email: {}", normalizedEmail);
+
         if (userRepository.findByEmail(normalizedEmail).isPresent()) {
             throw new IllegalArgumentException("Email is already registered");
         }
@@ -42,15 +46,19 @@ public class AuthService {
                                 .build()
                 ));
 
+        String encodedPassword = passwordEncoder.encode(password);
+        log.info("Password encoded for email: {}, hash starts with: {}", normalizedEmail, encodedPassword.substring(0, Math.min(20, encodedPassword.length())));
+
         User user = User.builder()
                 .id(UUID.randomUUID())
             .orgId(savedOrganization.getId())
                 .email(normalizedEmail)
-                .passwordHash(passwordEncoder.encode(password))
+                .passwordHash(encodedPassword)
                 .role("admin")
                 .defaultCurrency("INR")
                 .build();
         User savedUser = userRepository.save(user);
+        log.info("User registered successfully with email: {}", normalizedEmail);
 
         String accessToken = jwtUtil.generateToken(
             savedUser.getId(),
@@ -70,10 +78,18 @@ public class AuthService {
 
     public TokenPair login(String email, String password) {
         String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
-        User user = userRepository.findByEmail(normalizedEmail)
+        log.info("Login attempt for email: {}", normalizedEmail);
+
+        var userOptional = userRepository.findByEmail(normalizedEmail);
+        log.info("User found: {}", userOptional.isPresent());
+
+        User user = userOptional
                 .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
 
-        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+        boolean passwordMatches = passwordEncoder.matches(password, user.getPasswordHash());
+        log.info("Password matches: {}", passwordMatches);
+
+        if (!passwordMatches) {
             throw new BadCredentialsException("Invalid email or password");
         }
 
