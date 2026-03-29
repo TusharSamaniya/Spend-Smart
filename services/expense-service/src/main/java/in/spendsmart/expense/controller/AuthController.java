@@ -22,8 +22,14 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
-        RegisterResponse response = authService.register(request.name(), request.email(), request.password());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        AuthService.TokenPair tokens = authService.register(
+            request.name(),
+            request.email(),
+            request.password(),
+            request.organizationName()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(new RegisterResponse(tokens.accessToken(), tokens.refreshToken()));
     }
 
     @PostMapping("/login")
@@ -41,11 +47,12 @@ public class AuthController {
     public record RegisterRequest(
             @NotBlank @Size(max = 255) String name,
             @NotBlank @Email String email,
-            @NotBlank @Size(min = 8, max = 100) String password
+            @NotBlank @Size(min = 8, max = 100) String password,
+            @NotBlank @Size(max = 255) String organizationName
     ) {
     }
 
-    public record RegisterResponse(String token) {
+        public record RegisterResponse(String accessToken, String refreshToken) {
     }
 
     public record LoginRequest(

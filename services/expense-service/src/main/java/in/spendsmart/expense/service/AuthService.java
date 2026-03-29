@@ -5,7 +5,6 @@ import in.spendsmart.expense.entity.User;
 import in.spendsmart.expense.repository.OrganizationRepository;
 import in.spendsmart.expense.repository.UserRepository;
 import in.spendsmart.expense.security.JwtUtil;
-import in.spendsmart.expense.controller.AuthController.RegisterResponse;
 import io.jsonwebtoken.Claims;
 import java.util.Locale;
 import java.util.UUID;
@@ -26,7 +25,7 @@ public class AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
-    public RegisterResponse register(String name, String email, String password) {
+        public TokenPair register(String name, String email, String password, String organizationName) {
         String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
         if (userRepository.findByEmail(normalizedEmail).isPresent()) {
             throw new IllegalArgumentException("Email is already registered");
@@ -34,24 +33,36 @@ public class AuthService {
 
         Organization organization = Organization.builder()
                 .id(UUID.randomUUID())
-                .name(name)
+            .name(organizationName)
                 .plan("free")
                 .baseCurrency("INR")
                 .build();
-        organizationRepository.save(organization);
+        Organization savedOrganization = organizationRepository.save(organization);
 
         User user = User.builder()
                 .id(UUID.randomUUID())
-                .orgId(organization.getId())
+            .orgId(savedOrganization.getId())
                 .email(normalizedEmail)
                 .passwordHash(passwordEncoder.encode(password))
                 .role("admin")
                 .defaultCurrency("INR")
                 .build();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        String token = jwtUtil.generateToken(user.getId(), user.getOrgId(), user.getEmail(), user.getRole());
-        return new RegisterResponse(token);
+        String accessToken = jwtUtil.generateToken(
+            savedUser.getId(),
+            savedUser.getOrgId(),
+            savedUser.getEmail(),
+            savedUser.getRole()
+        );
+        String refreshToken = jwtUtil.generateRefreshToken(
+            savedUser.getId(),
+            savedUser.getOrgId(),
+            savedUser.getEmail(),
+            savedUser.getRole()
+        );
+
+        return new TokenPair(accessToken, refreshToken);
     }
 
     public TokenPair login(String email, String password) {

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import axios from "axios";
 
@@ -174,6 +175,13 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-sm text-zinc-600">
+          Don&apos;t have an account?{" "}
+          <Link href="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500">
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );

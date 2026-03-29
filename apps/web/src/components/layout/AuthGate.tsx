@@ -14,14 +14,14 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Skip guard while auth state initializes.
     if (!isReady) return;
-    const isLoginRoute = pathname === "/login";
+    const isPublicAuthRoute = pathname === "/login" || pathname === "/signup";
 
-    if (!isAuthenticated && !isLoginRoute) {
+    if (!isAuthenticated && !isPublicAuthRoute) {
       router.replace("/login");
       return;
     }
 
-    if (isLoginRoute && isAuthenticated) {
+    if (isPublicAuthRoute && isAuthenticated) {
       router.replace("/");
       return;
     }
