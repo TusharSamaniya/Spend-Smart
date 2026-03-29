@@ -5,7 +5,6 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import AuthGate from "@/components/layout/AuthGate";
 import Sidebar from "@/components/layout/Sidebar";
 import TopBar from "@/components/layout/TopBar";
 import { api } from "@/lib/api";
@@ -182,13 +181,12 @@ export default function SettingsPage() {
   );
 
   return (
-    <AuthGate>
-      <div className="flex min-h-screen">
-        <Sidebar />
-        <div className="flex flex-1 flex-col">
-          <TopBar />
-          <div className="flex-1 px-6 py-6 lg:px-10">
-            <Tabs.Root defaultValue="org" className="space-y-6">
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <div className="flex flex-1 flex-col">
+        <TopBar />
+        <div className="flex-1 px-6 py-6 lg:px-10">
+          <Tabs.Root defaultValue="org" className="space-y-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h1 className="text-2xl font-semibold text-zinc-900">Settings</h1>
@@ -605,10 +603,9 @@ export default function SettingsPage() {
                   ))}
                 </div>
               </Tabs.Content>
-            </Tabs.Root>
-          </div>
+          </Tabs.Root>
         </div>
       </div>
-    </AuthGate>
+    </div>
   );
 }

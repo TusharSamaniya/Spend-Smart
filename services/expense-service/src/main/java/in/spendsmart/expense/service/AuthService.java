@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,10 +57,10 @@ public class AuthService {
     public TokenPair login(String email, String password) {
         String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
         User user = userRepository.findByEmail(normalizedEmail)
-                .orElseThrow(() -> new AccessDeniedException("Invalid email or password"));
+                .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
 
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
-            throw new AccessDeniedException("Invalid email or password");
+            throw new BadCredentialsException("Invalid email or password");
         }
 
         String accessToken = jwtUtil.generateToken(user.getId(), user.getOrgId(), user.getEmail(), user.getRole());

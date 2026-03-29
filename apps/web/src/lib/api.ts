@@ -6,8 +6,6 @@ const api = axios.create({
   baseURL,
 });
 
-let refreshPromise: Promise<string | null> | null = null;
-
 const getToken = (): string | null =>
   typeof window === "undefined" ? null : localStorage.getItem("accessToken");
 
@@ -22,9 +20,7 @@ const clearToken = (): void => {
 };
 
 const getRefreshToken = (): string | null =>
-  typeof window === "undefined"
-    ? null
-    : localStorage.getItem("refreshToken");
+  typeof window === "undefined" ? null : localStorage.getItem("refreshToken");
 
 const setRefreshToken = (token: string): void => {
   if (typeof window === "undefined") return;
@@ -34,6 +30,14 @@ const setRefreshToken = (token: string): void => {
 const clearRefreshToken = (): void => {
   if (typeof window === "undefined") return;
   localStorage.removeItem("refreshToken");
+};
+
+const clearSessionAndRedirectToLogin = (): void => {
+  if (typeof window === "undefined") return;
+  clearToken();
+  clearRefreshToken();
+  localStorage.removeItem("user");
+  window.location.assign("/login");
 };
 
 api.interceptors.request.use((config) => {
@@ -46,35 +50,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-async function refreshAccessToken(): Promise<string | null> {
-  try {
-    const refreshToken = getRefreshToken();
-    const response = await axios.post<{ accessToken: string }>(
-      `${baseURL}/v1/auth/refresh`,
-      refreshToken ? { refreshToken } : {},
-      {
-        // withCredentials allows cookies-based refresh flows to work when applicable.
-        withCredentials: true,
-      }
-    );
-
-    const newToken = response.data?.accessToken;
-
-    if (newToken) {
-      setToken(newToken);
-      if (refreshToken) {
-        setRefreshToken(refreshToken);
-      }
-      return newToken;
-    }
-
-    return null;
-  } catch (refreshError) {
-    // Bubble up so auth layer can handle logout.
-    return null;
-  }
-}
-
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
@@ -85,15 +60,31 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest?._retry) {
       originalRequest._retry = true;
 
-      refreshPromise = refreshPromise ?? refreshAccessToken();
-      const newToken = await refreshPromise.finally(() => {
-        refreshPromise = null;
-      });
+      const refreshToken = getRefreshToken();
+      if (!refreshToken) {
+        clearSessionAndRedirectToLogin();
+        return Promise.reject(error);
+      }
 
-      if (newToken) {
+      try {
+        const refreshResponse = await axios.post<{ accessToken: string }>(
+          `${baseURL}/v1/auth/refresh`,
+          { refreshToken }
+        );
+
+        const newAccessToken = refreshResponse.data?.accessToken;
+        if (!newAccessToken) {
+          clearSessionAndRedirectToLogin();
+          return Promise.reject(error);
+        }
+
+        setToken(newAccessToken);
         originalRequest.headers = originalRequest.headers ?? {};
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(originalRequest);
+      } catch (refreshError) {
+        clearSessionAndRedirectToLogin();
+        return Promise.reject(refreshError);
       }
     }
 

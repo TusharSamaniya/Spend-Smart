@@ -11,14 +11,6 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 
-import {
-  clearRefreshToken,
-  clearToken,
-  getToken,
-  setRefreshToken,
-  setToken,
-} from "./api";
-
 type User = {
   userId: string;
   orgId: string;
@@ -30,7 +22,6 @@ type AuthContextValue = {
   user: User | null;
   isAuthenticated: boolean;
   isReady: boolean;
-  login: (token: string, refreshToken?: string, userOverride?: User | null) => void;
   logout: () => void;
 };
 
@@ -81,16 +72,28 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const [isReady, setIsReady] = useState(false);
 
   const logout = useCallback(() => {
-    clearToken();
-    clearRefreshToken();
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+    }
     setUser(null);
     setIsAuthenticated(false);
     router.push("/login");
   }, [router]);
 
   const restoreSession = useCallback(() => {
-    const token = getToken();
+    if (typeof window === "undefined") {
+      setIsReady(true);
+      return;
+    }
+
+    const token = localStorage.getItem("accessToken");
+    const storedUserRaw = localStorage.getItem("user");
+    const storedUser: User | null = storedUserRaw ? JSON.parse(storedUserRaw) : null;
+
     if (!token) {
+      setUser(storedUser);
       setIsAuthenticated(false);
       setIsReady(true);
       return;
@@ -103,32 +106,21 @@ function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    const nextUser = payloadToUser(payload);
+    const userFromToken = payloadToUser(payload);
+    const nextUser = storedUser ?? userFromToken;
+
+    if (!nextUser) {
+      // Token exists but doesn't carry required fields; treat as unauthenticated.
+      setIsAuthenticated(false);
+      setUser(null);
+      setIsReady(true);
+      return;
+    }
+
     setUser(nextUser);
     setIsAuthenticated(true);
     setIsReady(true);
   }, [logout]);
-
-  const login = useCallback(
-    (token: string, refreshToken?: string, userOverride?: User | null) => {
-      const payload = parseJwt(token);
-
-      if (!payload || isExpired(payload)) {
-        logout();
-        return;
-      }
-
-      setToken(token);
-      if (refreshToken) {
-        setRefreshToken(refreshToken);
-      }
-      const nextUser = userOverride ?? payloadToUser(payload);
-      setUser(nextUser);
-      setIsAuthenticated(true);
-      setIsReady(true);
-    },
-    [logout]
-  );
 
   useEffect(() => {
     restoreSession();
@@ -138,11 +130,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user,
       isAuthenticated,
-      login,
       logout,
       isReady,
     }),
-    [isAuthenticated, isReady, login, logout, user]
+    [isAuthenticated, isReady, logout, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -6,8 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
-import { api } from "@/lib/api";
-import { useAuth, type User } from "@/lib/auth";
+import axios from "axios";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -18,13 +17,32 @@ type FormValues = z.infer<typeof schema>;
 
 type LoginResponse = {
   accessToken: string;
-  refreshToken?: string;
-  user?: User;
+  refreshToken: string;
 };
+
+type StoredUser = {
+  userId: string;
+  orgId: string;
+  email: string;
+  role: string;
+};
+
+function decodeJwtPayload(token: string): any {
+  const parts = token.split(".");
+  if (parts.length < 2) {
+    throw new Error("Invalid JWT format");
+  }
+
+  const base64Url = parts[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
+
+  const json = atob(padded);
+  return JSON.parse(json);
+}
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,19 +55,49 @@ export default function LoginPage() {
     setError(null);
     setIsLoading(true);
     try {
-      const response = await api.post<LoginResponse>("/v1/auth/login", values);
-      const { accessToken, refreshToken, user } = response.data;
+      const response = await axios.post<LoginResponse>(
+        "http://localhost:8080/v1/auth/login",
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const { accessToken, refreshToken } = response.data;
 
       if (!accessToken) {
         throw new Error("Missing access token in response");
       }
 
-      login(accessToken, refreshToken, user ?? null);
-      router.replace("/");
+      if (!refreshToken) {
+        throw new Error("Missing refresh token in response");
+      }
+
+      const payload = decodeJwtPayload(accessToken);
+      const user: StoredUser = {
+        userId: payload.userId ?? payload.user_id,
+        orgId: payload.orgId ?? payload.org_id,
+        email: payload.email ?? payload.sub,
+        role: payload.role,
+      };
+
+      if (!user.userId || !user.orgId || !user.email || !user.role) {
+        throw new Error("Token is missing required user fields");
+      }
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      router.push("/");
     } catch (err) {
-      const message =
-        (err as any)?.response?.data?.message ?? "Invalid email or password";
-      setError(message);
+      const apiMessage =
+        (err as any)?.response?.data?.message ??
+        (err as any)?.response?.data?.error ??
+        (err as any)?.message;
+      setError(apiMessage || "Invalid credentials");
     } finally {
       setIsLoading(false);
     }

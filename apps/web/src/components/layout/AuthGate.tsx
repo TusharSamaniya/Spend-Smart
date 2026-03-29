@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { getToken } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 function AuthGate({ children }: { children: React.ReactNode }) {
@@ -15,11 +14,9 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Skip guard while auth state initializes.
     if (!isReady) return;
-
-    const token = getToken();
     const isLoginRoute = pathname === "/login";
 
-    if (!token && !isAuthenticated && !isLoginRoute) {
+    if (!isAuthenticated && !isLoginRoute) {
       router.replace("/login");
       return;
     }

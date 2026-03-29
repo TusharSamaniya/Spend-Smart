@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -35,6 +36,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException exception) {
         ErrorResponse response = new ErrorResponse("ACCESS_DENIED", exception.getMessage(), null);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException exception) {
+        ErrorResponse response = new ErrorResponse("UNAUTHORIZED", exception.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
