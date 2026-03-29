@@ -20,12 +20,6 @@ spring:
           uri: ${EXPENSE_SERVICE_URL:http://expense-service:8081}
           predicates:
             - Path=/v1/auth/**
-          filters:
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-                key-resolver: "#{@userKeyResolver}"
 
         - id: expense-service
           uri: ${EXPENSE_SERVICE_URL:http://expense-service:8081}

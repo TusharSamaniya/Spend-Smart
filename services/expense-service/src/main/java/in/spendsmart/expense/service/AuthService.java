@@ -25,19 +25,22 @@ public class AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
-        public TokenPair register(String name, String email, String password, String organizationName) {
+    public TokenPair register(String name, String email, String password, String organizationName) {
         String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
         if (userRepository.findByEmail(normalizedEmail).isPresent()) {
             throw new IllegalArgumentException("Email is already registered");
         }
 
-        Organization organization = Organization.builder()
-                .id(UUID.randomUUID())
-            .name(organizationName)
-                .plan("free")
-                .baseCurrency("INR")
-                .build();
-        Organization savedOrganization = organizationRepository.save(organization);
+        String normalizedOrgName = organizationName.trim();
+        Organization savedOrganization = organizationRepository.findByName(normalizedOrgName)
+                .orElseGet(() -> organizationRepository.save(
+                        Organization.builder()
+                                .id(UUID.randomUUID())
+                                .name(normalizedOrgName)
+                                .plan("free")
+                                .baseCurrency("INR")
+                                .build()
+                ));
 
         User user = User.builder()
                 .id(UUID.randomUUID())
