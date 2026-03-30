@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DataInitializer implements ApplicationRunner {
 
     public static final String DEMO_ORG_NAME = "SpendSmart Demo Org";
-    public static final String DEMO_PASSWORD = "Password@123";
+    public static final String DEMO_PASSWORD = "test123";
 
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;

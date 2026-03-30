@@ -56,7 +56,11 @@ const isExpired = (payload: JwtPayload | null): boolean => {
 };
 
 const payloadToUser = (payload: JwtPayload): User | null => {
-  const { userId, orgId, email, role } = payload;
+  // Handle both camelCase and snake_case fields from JWT
+  const userId = (payload as any).userId ?? (payload as any).user_id;
+  const orgId = (payload as any).orgId ?? (payload as any).org_id;
+  const email = (payload as any).email ?? (payload as any).sub;
+  const role = (payload as any).role;
 
   if (userId && orgId && email && role) {
     return { userId, orgId, email, role };

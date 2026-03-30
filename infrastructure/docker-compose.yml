@@ -25,6 +25,8 @@ services:
       AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL}
       AWS_SQS_QUEUE_URL: ${AWS_SQS_QUEUE_URL}
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: ${MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE}
+    ports:
+      - "8081:8081"
     depends_on:
       - postgres
       - redis
@@ -54,6 +56,8 @@ services:
       GOOGLE_DOCUMENT_AI_PROJECT_ID: ${GOOGLE_DOCUMENT_AI_PROJECT_ID}
       GOOGLE_DOCUMENT_AI_LOCATION: ${GOOGLE_DOCUMENT_AI_LOCATION:-us}
       GOOGLE_DOCUMENT_AI_PROCESSOR_ID: ${GOOGLE_DOCUMENT_AI_PROCESSOR_ID}
+    ports:
+      - "8082:8082"
     depends_on:
       - postgres
       - redis
@@ -95,6 +99,8 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       AWS_SQS_QUEUE_URL: http://localstack:4566/000000000000/upi-events
       WEBHOOK_SIGNATURE_SECRET: upi-test-secret
+    ports:
+      - "8084:8084"
     depends_on:
       - postgres
       - redis
@@ -117,6 +123,8 @@ services:
       GST_PORTAL_API_URL: http://mock-gst-portal:9090/commonapi
       GST_PORTAL_API_KEY: test-api-key
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info
+    ports:
+      - "8085:8085"
     depends_on:
       - postgres
       - redis
@@ -144,6 +152,8 @@ services:
       AWS_SQS_QUEUE_URL: http://localstack:4566/000000000000/expense-events
       EXPENSE_SERVICE_URL: http://expense-service:8081
       NOTIFICATION_SERVICE_URL: http://notification-service:8088
+    ports:
+      - "8086:8086"
     depends_on:
       - expense-service
       - localstack
@@ -171,6 +181,8 @@ services:
       AWS_SECRET_ACCESS_KEY: test
       AWS_SNS_EXPENSE_EVENTS_TOPIC_ARN: arn:aws:sns:ap-south-1:000000000000:expense-events
       AWS_SNS_ANOMALY_ALERT_TOPIC_ARN: arn:aws:sns:ap-south-1:000000000000:anomaly-alerts
+    ports:
+      - "8087:8087"
     depends_on:
       - expense-service
       - postgres
@@ -184,17 +196,19 @@ services:
     environment:
       SERVER_PORT: 8088
       SPRING_APPLICATION_NAME: notification-service
-      SMTP_PASS: ${SMTP_PASS}
-      NOTIFICATION_FROM_EMAIL: ${NOTIFICATION_FROM_EMAIL}
+      SMTP_PASS: ${SMTP_PASS:-}
+      NOTIFICATION_FROM_EMAIL: ${NOTIFICATION_FROM_EMAIL:-noreply@spendsmart.in}
       DASHBOARD_BASE_URL: ${DASHBOARD_BASE_URL:-http://localhost:3000}
-      WHATSAPP_TOKEN: ${WHATSAPP_TOKEN}
-      WHATSAPP_PHONE_ID: ${WHATSAPP_PHONE_ID}
-      FIREBASE_CREDENTIALS_PATH: ${FIREBASE_CREDENTIALS_PATH}
-      AWS_SQS_NOTIFICATIONS_QUEUE_URL: ${AWS_SQS_NOTIFICATIONS_QUEUE_URL}
+      WHATSAPP_TOKEN: ${WHATSAPP_TOKEN:-}
+      WHATSAPP_PHONE_ID: ${WHATSAPP_PHONE_ID:-}
+      FIREBASE_CREDENTIALS_PATH: ${FIREBASE_CREDENTIALS_PATH:-}
+      AWS_SQS_NOTIFICATIONS_QUEUE_URL: ${AWS_SQS_NOTIFICATIONS_QUEUE_URL:-http://localstack:4566/000000000000/notifications}
       AWS_REGION: ${AWS_REGION:-ap-south-1}
       AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://localstack:4566}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-test}
+    ports:
+      - "8088:8088"
     depends_on:
       - localstack
       - expense-service
