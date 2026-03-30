@@ -30,7 +30,8 @@ services:
     depends_on:
       - postgres
       - redis
-      - localstack
+      localstack-init:
+        condition: service_completed_successfully
 
   ocr-service:
     build:
@@ -61,7 +62,8 @@ services:
     depends_on:
       - postgres
       - redis
-      - localstack
+      localstack-init:
+        condition: service_completed_successfully
 
   categorization-service:
     build:
@@ -76,7 +78,8 @@ services:
       EXPENSE_SERVICE_URL: http://expense-service:8081
     depends_on:
       - expense-service
-      - localstack
+      localstack-init:
+        condition: service_completed_successfully
 
   upi-service:
     build:
@@ -104,9 +107,10 @@ services:
     depends_on:
       - postgres
       - redis
-      - localstack
       - expense-service
       - categorization-service
+      localstack-init:
+        condition: service_completed_successfully
 
   gst-service:
     build:
@@ -156,8 +160,9 @@ services:
       - "8086:8086"
     depends_on:
       - expense-service
-      - localstack
       - postgres
+      localstack-init:
+        condition: service_completed_successfully
 
   analytics-service:
     build:
@@ -187,7 +192,8 @@ services:
       - expense-service
       - postgres
       - redis
-      - localstack
+      localstack-init:
+        condition: service_completed_successfully
 
   notification-service:
     build:
@@ -210,8 +216,9 @@ services:
     ports:
       - "8088:8088"
     depends_on:
-      - localstack
       - expense-service
+      localstack-init:
+        condition: service_completed_successfully
 
   api-gateway:
     build:
@@ -265,6 +272,27 @@ services:
       AWS_DEFAULT_REGION: ap-south-1
     volumes:
       - localstack_data:/var/lib/localstack
+      - ./scripts:/scripts:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+  localstack-init:
+    image: amazon/aws-cli:latest
+    depends_on:
+      localstack:
+        condition: service_healthy
+    volumes:
+      - ./scripts:/scripts:ro
+    environment:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: ap-south-1
+      LOCALSTACK_HOST: localstack
+    entrypoint: ["/bin/bash", "/scripts/init-localstack.sh"]
 
   elasticsearch:
     image: elasticsearch:8.13.0
