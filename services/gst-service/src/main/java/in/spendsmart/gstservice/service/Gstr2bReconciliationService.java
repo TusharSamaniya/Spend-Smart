@@ -155,8 +155,12 @@ public class Gstr2bReconciliationService {
     }
 
     private SpendSmartExpense mapExpense(ResultSet rs) throws SQLException {
+        String id = rs.getString("id");
+        if (id == null) {
+            throw new SQLException("Expense id cannot be null");
+        }
         return new SpendSmartExpense(
-                UUID.fromString(rs.getString("id")),
+                UUID.fromString(id),
                 normalize(rs.getString("gstin_supplier")),
                 rs.getString("invoice_number"),
                 toLocalDate(rs, "expense_date"),

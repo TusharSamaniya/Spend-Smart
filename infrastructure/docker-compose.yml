@@ -28,8 +28,10 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
       localstack-init:
         condition: service_completed_successfully
 
@@ -60,8 +62,10 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
       localstack-init:
         condition: service_completed_successfully
 
@@ -77,7 +81,8 @@ services:
       AWS_SECRET_ACCESS_KEY: test
       EXPENSE_SERVICE_URL: http://expense-service:8081
     depends_on:
-      - expense-service
+      expense-service:
+        condition: service_started
       localstack-init:
         condition: service_completed_successfully
 
@@ -105,10 +110,14 @@ services:
     ports:
       - "8084:8084"
     depends_on:
-      - postgres
-      - redis
-      - expense-service
-      - categorization-service
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+      expense-service:
+        condition: service_started
+      categorization-service:
+        condition: service_started
       localstack-init:
         condition: service_completed_successfully
 
@@ -130,8 +139,10 @@ services:
     ports:
       - "8085:8085"
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
 
   workflow-service:
     build:
@@ -159,8 +170,10 @@ services:
     ports:
       - "8086:8086"
     depends_on:
-      - expense-service
-      - postgres
+      expense-service:
+        condition: service_started
+      postgres:
+        condition: service_started
       localstack-init:
         condition: service_completed_successfully
 
@@ -189,9 +202,12 @@ services:
     ports:
       - "8087:8087"
     depends_on:
-      - expense-service
-      - postgres
-      - redis
+      expense-service:
+        condition: service_started
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
       localstack-init:
         condition: service_completed_successfully
 
@@ -216,7 +232,8 @@ services:
     ports:
       - "8088:8088"
     depends_on:
-      - expense-service
+      expense-service:
+        condition: service_started
       localstack-init:
         condition: service_completed_successfully
 
@@ -241,15 +258,24 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - expense-service
-      - ocr-service
-      - categorization-service
-      - upi-service
-      - gst-service
-      - workflow-service
-      - analytics-service
-      - notification-service
-      - redis
+      expense-service:
+        condition: service_started
+      ocr-service:
+        condition: service_started
+      categorization-service:
+        condition: service_started
+      upi-service:
+        condition: service_started
+      gst-service:
+        condition: service_started
+      workflow-service:
+        condition: service_started
+      analytics-service:
+        condition: service_started
+      notification-service:
+        condition: service_started
+      redis:
+        condition: service_started
 
   postgres:
     image: postgres:16-alpine

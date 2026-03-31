@@ -104,9 +104,16 @@ public class AuthService {
         }
 
         Claims claims = jwtUtil.extractClaims(refreshToken);
+        String userId = claims.get("userId", String.class);
+        String orgId = claims.get("orgId", String.class);
+
+        if (userId == null || orgId == null) {
+            throw new AccessDeniedException("Invalid refresh token: missing userId or orgId claims");
+        }
+
         return jwtUtil.generateToken(
-                UUID.fromString(claims.get("userId", String.class)),
-                UUID.fromString(claims.get("orgId", String.class)),
+                UUID.fromString(userId),
+                UUID.fromString(orgId),
                 claims.get("email", String.class),
                 claims.get("role", String.class)
         );

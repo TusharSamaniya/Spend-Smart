@@ -29,6 +29,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+        String requestPath = request.getRequestURI();
+
+        // Skip JWT processing for actuator endpoints
+        if (requestPath.startsWith("/actuator")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader(AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
@@ -50,6 +58,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String orgId = claims.get("orgId", String.class) != null
             ? claims.get("orgId", String.class)
             : claims.get("org_id", String.class);
+
+        if (userId == null || orgId == null) {
+            throw new IllegalArgumentException("Invalid JWT token: missing userId or orgId claims");
+        }
+
         CurrentUser currentUser = new CurrentUser(
             UUID.fromString(userId),
             UUID.fromString(orgId),

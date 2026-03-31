@@ -105,8 +105,12 @@ public class TallyExportService {
     }
 
     private ExpenseVoucherRow mapExpense(ResultSet rs) throws SQLException {
+        String id = rs.getString("id");
+        if (id == null) {
+            throw new SQLException("Expense id cannot be null");
+        }
         return new ExpenseVoucherRow(
-                UUID.fromString(rs.getString("id")),
+                UUID.fromString(id),
                 rs.getDate("expense_date") == null ? null : rs.getDate("expense_date").toLocalDate(),
                 rs.getString("merchant_name"),
                 rs.getBigDecimal("total_amount"),
