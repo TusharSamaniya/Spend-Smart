@@ -1,0 +1,60 @@
+﻿docker : time="2026-03-31T11:29:47+05:30" 
+level=warning msg="The 
+\"GOOGLE_DOCUMENT_AI_PROJECT_ID\" variable is not 
+set. Defaulting to a blank string."
+At line:1 char:1
++ docker compose logs ocr-service 2>&1 | Out-File 
+-FilePath logs_ocr.tx ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (time 
+   ="2026-03-3... blank string.":String) [], Rem  
+  oteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+time="2026-03-31T11:29:47+05:30" level=warning 
+msg="The \"GOOGLE_DOCUMENT_AI_PROCESSOR_ID\" 
+variable is not set. Defaulting to a blank 
+string."
+ocr-service-1  | Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+ocr-service-1  | 
+ocr-service-1  |   .   ____          _            __ _ _
+ocr-service-1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+ocr-service-1  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ocr-service-1  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+ocr-service-1  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+ocr-service-1  |  =========|_|==============|___/=/_/_/_/
+ocr-service-1  | 
+ocr-service-1  |  :: Spring Boot ::               (v3.3.12)
+ocr-service-1  | 
+ocr-service-1  | 2026-03-31T05:48:32.951Z  INFO 1 --- [ocr-service] [           main] i.s.ocrservice.OcrServiceApplication     : Starting OcrServiceApplication v0.0.1-SNAPSHOT using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+ocr-service-1  | 2026-03-31T05:48:33.011Z  INFO 1 --- [ocr-service] [           main] i.s.ocrservice.OcrServiceApplication     : No active profile set, falling back to 1 default profile: "default"
+ocr-service-1  | 2026-03-31T05:48:49.923Z  INFO 1 --- [ocr-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+ocr-service-1  | 2026-03-31T05:48:49.929Z  INFO 1 --- [ocr-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+ocr-service-1  | 2026-03-31T05:48:51.760Z  INFO 1 --- [ocr-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1738 ms. Found 1 JPA repository interface.
+ocr-service-1  | 2026-03-31T05:48:52.085Z  INFO 1 --- [ocr-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+ocr-service-1  | 2026-03-31T05:48:52.109Z  INFO 1 --- [ocr-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+ocr-service-1  | 2026-03-31T05:48:52.340Z  INFO 1 --- [ocr-service] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface in.spendsmart.ocrservice.repository.ReceiptRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+ocr-service-1  | 2026-03-31T05:48:52.343Z  INFO 1 --- [ocr-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 103 ms. Found 0 Redis repository interfaces.
+ocr-service-1  | 2026-03-31T05:49:02.305Z  INFO 1 --- [ocr-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8082 (http)
+ocr-service-1  | 2026-03-31T05:49:02.503Z  INFO 1 --- [ocr-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+ocr-service-1  | 2026-03-31T05:49:02.504Z  INFO 1 --- [ocr-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+ocr-service-1  | 2026-03-31T05:49:02.782Z  INFO 1 --- [ocr-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+ocr-service-1  | 2026-03-31T05:49:02.789Z  INFO 1 --- [ocr-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 28941 ms
+ocr-service-1  | Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+ocr-service-1  | 2026-03-31T05:49:07.759Z  INFO 1 --- [ocr-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+ocr-service-1  | 2026-03-31T05:49:11.184Z  INFO 1 --- [ocr-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6cee903a
+ocr-service-1  | 2026-03-31T05:49:11.202Z  INFO 1 --- [ocr-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+ocr-service-1  | 2026-03-31T05:49:11.980Z  INFO 1 --- [ocr-service] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://postgres:5432/spendsmart_ocr (PostgreSQL 16.13)
+ocr-service-1  | 2026-03-31T05:49:12.868Z  INFO 1 --- [ocr-service] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.342s)
+ocr-service-1  | 2026-03-31T05:49:13.031Z  INFO 1 --- [ocr-service] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 1
+ocr-service-1  | 2026-03-31T05:49:13.081Z  INFO 1 --- [ocr-service] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+ocr-service-1  | 2026-03-31T05:49:14.243Z  INFO 1 --- [ocr-service] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+ocr-service-1  | 2026-03-31T05:49:16.121Z  INFO 1 --- [ocr-service] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+ocr-service-1  | 2026-03-31T05:49:16.664Z  INFO 1 --- [ocr-service] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+ocr-service-1  | 2026-03-31T05:49:19.221Z  INFO 1 --- [ocr-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+ocr-service-1  | 2026-03-31T05:49:28.615Z  INFO 1 --- [ocr-service] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+ocr-service-1  | 2026-03-31T05:49:28.800Z  INFO 1 --- [ocr-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+ocr-service-1  | 2026-03-31T05:49:53.272Z  INFO 1 --- [ocr-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+ocr-service-1  | 2026-03-31T05:49:53.701Z  INFO 1 --- [ocr-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8082 (http) with context path '/'
+ocr-service-1  | 2026-03-31T05:49:54.033Z  INFO 1 --- [ocr-service] [ecycle-thread-1] a.c.s.l.AbstractMessageListenerContainer : Container io.awspring.cloud.sqs.sqsListenerEndpointContainer#0 started
+ocr-service-1  | 2026-03-31T05:49:54.192Z  INFO 1 --- [ocr-service] [           main] i.s.ocrservice.OcrServiceApplication     : Started OcrServiceApplication in 87.129 seconds (process running for 91.303)

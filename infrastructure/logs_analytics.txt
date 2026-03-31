@@ -1,0 +1,108 @@
+﻿docker : time="2026-03-31T11:31:40+05:30" 
+level=warning msg="The 
+\"GOOGLE_DOCUMENT_AI_PROCESSOR_ID\" variable is 
+not set. Defaulting to a blank string."
+At line:1 char:1
++ docker compose logs analytics-service 2>&1 | 
+Out-File -FilePath logs_ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (time 
+   ="2026-03-3... blank string.":String) [], Rem  
+  oteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+time="2026-03-31T11:31:40+05:30" level=warning 
+msg="The \"GOOGLE_DOCUMENT_AI_PROJECT_ID\" 
+variable is not set. Defaulting to a blank 
+string."
+analytics-service-1  |   .   ____          _            __ _ _
+analytics-service-1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+analytics-service-1  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+analytics-service-1  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+analytics-service-1  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+analytics-service-1  |  =========|_|==============|___/=/_/_/_/
+analytics-service-1  | 
+analytics-service-1  |  :: Spring Boot ::                (v3.3.0)
+analytics-service-1  | 
+analytics-service-1  | 2026-03-31T05:48:38.990Z  INFO 1 --- [analytics-service] [           main] i.s.a.AnalyticsServiceApplication        : Starting AnalyticsServiceApplication v0.0.1-SNAPSHOT using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+analytics-service-1  | 2026-03-31T05:48:39.010Z  INFO 1 --- [analytics-service] [           main] i.s.a.AnalyticsServiceApplication        : No active profile set, falling back to 1 default profile: "default"
+analytics-service-1  | 2026-03-31T05:48:55.631Z  INFO 1 --- [analytics-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+analytics-service-1  | 2026-03-31T05:48:55.640Z  INFO 1 --- [analytics-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+analytics-service-1  | 2026-03-31T05:48:56.593Z  INFO 1 --- [analytics-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 924 ms. Found 3 JPA repository interfaces.
+analytics-service-1  | 2026-03-31T05:48:56.970Z  INFO 1 --- [analytics-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+analytics-service-1  | 2026-03-31T05:48:56.985Z  INFO 1 --- [analytics-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+analytics-service-1  | 2026-03-31T05:48:57.240Z  INFO 1 --- [analytics-service] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface in.spendsmart.analyticsservice.repository.DailySpendRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+analytics-service-1  | 2026-03-31T05:48:57.247Z  INFO 1 --- [analytics-service] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface in.spendsmart.analyticsservice.repository.BudgetRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+analytics-service-1  | 2026-03-31T05:48:57.247Z  INFO 1 --- [analytics-service] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface in.spendsmart.analyticsservice.repository.BudgetUtilizationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+analytics-service-1  | 2026-03-31T05:48:57.248Z  INFO 1 --- [analytics-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 127 ms. Found 0 Redis repository interfaces.
+analytics-service-1  | 2026-03-31T05:49:07.210Z  INFO 1 --- [analytics-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8087 (http)
+analytics-service-1  | 2026-03-31T05:49:07.356Z  INFO 1 --- [analytics-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+analytics-service-1  | 2026-03-31T05:49:07.356Z  INFO 1 --- [analytics-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+analytics-service-1  | 2026-03-31T05:49:07.680Z  INFO 1 --- [analytics-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+analytics-service-1  | 2026-03-31T05:49:07.699Z  INFO 1 --- [analytics-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 28098 ms
+analytics-service-1  | 2026-03-31T05:49:13.796Z  INFO 1 --- [analytics-service] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+analytics-service-1  | 2026-03-31T05:49:15.078Z  INFO 1 --- [analytics-service] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+analytics-service-1  | 2026-03-31T05:49:15.579Z  INFO 1 --- [analytics-service] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+analytics-service-1  | 2026-03-31T05:49:18.022Z  INFO 1 --- [analytics-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+analytics-service-1  | 2026-03-31T05:49:18.194Z  INFO 1 --- [analytics-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+analytics-service-1  | 2026-03-31T05:49:19.978Z  INFO 1 --- [analytics-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5a58db42
+analytics-service-1  | 2026-03-31T05:49:19.982Z  INFO 1 --- [analytics-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+analytics-service-1  | 2026-03-31T05:49:26.252Z  INFO 1 --- [analytics-service] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+analytics-service-1  | 2026-03-31T05:49:26.739Z ERROR 1 --- [analytics-service] [           main] j.LocalContainerEntityManagerFactoryBean : Failed to initialize JPA EntityManagerFactory: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing table [mv_budget_utilization]
+analytics-service-1  | 2026-03-31T05:49:26.740Z  WARN 1 --- [analytics-service] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing table [mv_budget_utilization]
+analytics-service-1  | 2026-03-31T05:49:26.745Z  INFO 1 --- [analytics-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+analytics-service-1  | 2026-03-31T05:49:26.806Z  INFO 1 --- [analytics-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+analytics-service-1  | 2026-03-31T05:49:26.815Z  INFO 1 --- [analytics-service] [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+analytics-service-1  | 2026-03-31T05:49:27.004Z  INFO 1 --- [analytics-service] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+analytics-service-1  | 
+analytics-service-1  | Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+analytics-service-1  | 2026-03-31T05:49:27.162Z ERROR 1 --- [analytics-service] [           main] o.s.boot.SpringApplication               : Application run failed
+analytics-service-1  | 
+analytics-service-1  | org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing table [mv_budget_utilization]
+analytics-service-1  | 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1788) ~[spring-beans-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337) ~[spring-beans-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335) ~[spring-beans-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205) ~[spring-beans-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952) ~[spring-context-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.3.0.jar!/:3.3.0]
+analytics-service-1  | 	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.3.0.jar!/:3.3.0]
+analytics-service-1  | 	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.3.0.jar!/:3.3.0]
+analytics-service-1  | 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335) ~[spring-boot-3.3.0.jar!/:3.3.0]
+analytics-service-1  | 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363) ~[spring-boot-3.3.0.jar!/:3.3.0]
+analytics-service-1  | 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352) ~[spring-boot-3.3.0.jar!/:3.3.0]
+analytics-service-1  | 	at in.spendsmart.analyticsservice.AnalyticsServiceApplication.main(AnalyticsServiceApplication.java:12) ~[!/:0.0.1-SNAPSHOT]
+analytics-service-1  | 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
+analytics-service-1  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
+analytics-service-1  | 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91) ~[app.jar:0.0.1-SNAPSHOT]
+analytics-service-1  | 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53) ~[app.jar:0.0.1-SNAPSHOT]
+analytics-service-1  | 	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58) ~[app.jar:0.0.1-SNAPSHOT]
+analytics-service-1  | Caused by: jakarta.persistence.PersistenceException: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing table [mv_budget_utilization]
+analytics-service-1  | 	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:421) ~[spring-orm-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835) ~[spring-beans-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784) ~[spring-beans-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	... 20 common frames omitted
+analytics-service-1  | Caused by: org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing table [mv_budget_utilization]
+analytics-service-1  | 	at org.hibernate.tool.schema.internal.AbstractSchemaValidator.validateTable(AbstractSchemaValidator.java:135) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.tool.schema.internal.GroupedSchemaValidatorImpl.validateTables(GroupedSchemaValidatorImpl.java:46) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.tool.schema.internal.AbstractSchemaValidator.performValidation(AbstractSchemaValidator.java:98) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.tool.schema.internal.AbstractSchemaValidator.doValidation(AbstractSchemaValidator.java:76) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:289) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at java.base/java.util.HashMap.forEach(Unknown Source) ~[na:na]
+analytics-service-1  | 	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:322) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:457) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1506) ~[hibernate-core-6.5.2.Final.jar!/:6.5.2.Final]
+analytics-service-1  | 	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.8.jar!/:6.1.8]
+analytics-service-1  | 	... 24 common frames omitted
+analytics-service-1  | 

@@ -80,6 +80,8 @@ services:
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
       EXPENSE_SERVICE_URL: http://expense-service:8081
+    ports:
+      - "8083:8083"
     depends_on:
       expense-service:
         condition: service_started
@@ -285,6 +287,8 @@ services:
       POSTGRES_DB: spendsmart_expense
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-postgres.sh:/docker-entrypoint-initdb.d/01-init-databases.sh:ro
+      - ./scripts/analytics_views.sql:/docker-entrypoint-initdb.d/02-analytics-views.sql:ro
 
   redis:
     container_name: spendsmart-redis

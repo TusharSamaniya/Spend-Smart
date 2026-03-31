@@ -1,0 +1,21 @@
+﻿docker : time="2026-03-31T11:30:00+05:30" 
+level=warning msg="The 
+\"GOOGLE_DOCUMENT_AI_PROJECT_ID\" variable is not 
+set. Defaulting to a blank string."
+At line:1 char:1
++ docker compose logs categorization-service 2>&1 
+| Out-File -FilePath  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (time 
+   ="2026-03-3... blank string.":String) [], Rem  
+  oteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+time="2026-03-31T11:30:00+05:30" level=warning 
+msg="The \"GOOGLE_DOCUMENT_AI_PROCESSOR_ID\" 
+variable is not set. Defaulting to a blank 
+string."
+categorization-service-1  | INFO:     Started server process [1]
+categorization-service-1  | INFO:     Waiting for application startup.
+categorization-service-1  | INFO:     Application startup complete.
+categorization-service-1  | INFO:     Uvicorn running on http://0.0.0.0:8083 (Press CTRL+C to quit)

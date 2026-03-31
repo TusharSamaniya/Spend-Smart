@@ -1,0 +1,50 @@
+﻿docker : time="2026-03-31T11:29:55+05:30" 
+level=warning msg="The 
+\"GOOGLE_DOCUMENT_AI_PROJECT_ID\" variable is not 
+set. Defaulting to a blank string."
+At line:1 char:1
++ docker compose logs api-gateway 2>&1 | Out-File 
+-FilePath logs_gatewa ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (time 
+   ="2026-03-3... blank string.":String) [], Rem  
+  oteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+time="2026-03-31T11:29:55+05:30" level=warning 
+msg="The \"GOOGLE_DOCUMENT_AI_PROCESSOR_ID\" 
+variable is not set. Defaulting to a blank 
+string."
+api-gateway-1  | 
+api-gateway-1  |   .   ____          _            __ _ _
+api-gateway-1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+api-gateway-1  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+api-gateway-1  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+api-gateway-1  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+api-gateway-1  |  =========|_|==============|___/=/_/_/_/
+api-gateway-1  | 
+api-gateway-1  |  :: Spring Boot ::               (v3.3.12)
+api-gateway-1  | 
+api-gateway-1  | 2026-03-31T05:48:47.039Z  INFO 1 --- [api-gateway] [           main] i.s.apigateway.ApiGatewayApplication     : Starting ApiGatewayApplication v0.0.1-SNAPSHOT using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+api-gateway-1  | 2026-03-31T05:48:47.054Z  INFO 1 --- [api-gateway] [           main] i.s.apigateway.ApiGatewayApplication     : No active profile set, falling back to 1 default profile: "default"
+api-gateway-1  | 2026-03-31T05:49:06.511Z  INFO 1 --- [api-gateway] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+api-gateway-1  | 2026-03-31T05:49:06.528Z  INFO 1 --- [api-gateway] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+api-gateway-1  | 2026-03-31T05:49:06.933Z  INFO 1 --- [api-gateway] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 243 ms. Found 0 Redis repository interfaces.
+api-gateway-1  | 2026-03-31T05:49:08.952Z  INFO 1 --- [api-gateway] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=c1d6c622-87ba-35f9-ac85-d13ed1986409
+api-gateway-1  | 2026-03-31T05:49:27.109Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [After]
+api-gateway-1  | 2026-03-31T05:49:27.110Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Before]
+api-gateway-1  | 2026-03-31T05:49:27.110Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Between]
+api-gateway-1  | 2026-03-31T05:49:27.110Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Cookie]
+api-gateway-1  | 2026-03-31T05:49:27.110Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Header]
+api-gateway-1  | 2026-03-31T05:49:27.114Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Host]
+api-gateway-1  | 2026-03-31T05:49:27.115Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Method]
+api-gateway-1  | 2026-03-31T05:49:27.130Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Path]
+api-gateway-1  | 2026-03-31T05:49:27.131Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Query]
+api-gateway-1  | 2026-03-31T05:49:27.131Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [ReadBody]
+api-gateway-1  | 2026-03-31T05:49:27.131Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [RemoteAddr]
+api-gateway-1  | 2026-03-31T05:49:27.131Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+api-gateway-1  | 2026-03-31T05:49:27.131Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Weight]
+api-gateway-1  | 2026-03-31T05:49:27.131Z  INFO 1 --- [api-gateway] [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [CloudFoundryRouteService]
+api-gateway-1  | 2026-03-31T05:49:29.017Z  INFO 1 --- [api-gateway] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+api-gateway-1  | 2026-03-31T05:49:33.978Z  INFO 1 --- [api-gateway] [           main] o.s.b.web.embedded.netty.NettyWebServer  : Netty started on port 8080 (http)
+api-gateway-1  | 2026-03-31T05:49:34.715Z  INFO 1 --- [api-gateway] [           main] i.s.apigateway.ApiGatewayApplication     : Started ApiGatewayApplication in 55.277 seconds (process running for 63.463)

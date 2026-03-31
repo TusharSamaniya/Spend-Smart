@@ -1,0 +1,60 @@
+﻿docker : time="2026-03-31T11:29:42+05:30" 
+level=warning msg="The 
+\"GOOGLE_DOCUMENT_AI_PROJECT_ID\" variable is not 
+set. Defaulting to a blank string."
+At line:1 char:1
++ docker compose logs expense-service 2>&1 | 
+Out-File -FilePath logs_ex ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (time 
+   ="2026-03-3... blank string.":String) [], Rem  
+  oteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+time="2026-03-31T11:29:42+05:30" level=warning 
+msg="The \"GOOGLE_DOCUMENT_AI_PROCESSOR_ID\" 
+variable is not set. Defaulting to a blank 
+string."
+expense-service-1  | Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+expense-service-1  | 
+expense-service-1  |   .   ____          _            __ _ _
+expense-service-1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+expense-service-1  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+expense-service-1  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+expense-service-1  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+expense-service-1  |  =========|_|==============|___/=/_/_/_/
+expense-service-1  | 
+expense-service-1  |  :: Spring Boot ::               (v3.3.12)
+expense-service-1  | 
+expense-service-1  | 2026-03-31T05:48:30.591Z  INFO 1 --- [expense-service] [           main] i.s.e.ExpenseServiceApplication          : Starting ExpenseServiceApplication v0.0.1-SNAPSHOT using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+expense-service-1  | 2026-03-31T05:48:30.635Z  INFO 1 --- [expense-service] [           main] i.s.e.ExpenseServiceApplication          : No active profile set, falling back to 1 default profile: "default"
+expense-service-1  | 2026-03-31T05:48:43.125Z  INFO 1 --- [expense-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+expense-service-1  | 2026-03-31T05:48:43.137Z  INFO 1 --- [expense-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+expense-service-1  | 2026-03-31T05:48:45.305Z  INFO 1 --- [expense-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 2100 ms. Found 3 JPA repository interfaces.
+expense-service-1  | 2026-03-31T05:48:50.973Z  INFO 1 --- [expense-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+expense-service-1  | 2026-03-31T05:48:50.975Z  INFO 1 --- [expense-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+expense-service-1  | 2026-03-31T05:48:51.238Z  INFO 1 --- [expense-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 112 ms. Found 0 Redis repository interfaces.
+expense-service-1  | 2026-03-31T05:49:02.981Z  INFO 1 --- [expense-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+expense-service-1  | 2026-03-31T05:49:03.241Z  INFO 1 --- [expense-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+expense-service-1  | 2026-03-31T05:49:03.242Z  INFO 1 --- [expense-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+expense-service-1  | 2026-03-31T05:49:03.621Z  INFO 1 --- [expense-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+expense-service-1  | 2026-03-31T05:49:03.627Z  INFO 1 --- [expense-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 32122 ms
+expense-service-1  | Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+expense-service-1  | 2026-03-31T05:49:09.863Z  INFO 1 --- [expense-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+expense-service-1  | 2026-03-31T05:49:12.879Z  INFO 1 --- [expense-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@19ec5357
+expense-service-1  | 2026-03-31T05:49:12.881Z  INFO 1 --- [expense-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+expense-service-1  | 2026-03-31T05:49:13.222Z  INFO 1 --- [expense-service] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://postgres:5432/spendsmart_expense (PostgreSQL 16.13)
+expense-service-1  | 2026-03-31T05:49:14.248Z  INFO 1 --- [expense-service] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 10 migrations (execution time 00:00.747s)
+expense-service-1  | 2026-03-31T05:49:14.778Z  INFO 1 --- [expense-service] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 10
+expense-service-1  | 2026-03-31T05:49:14.827Z  INFO 1 --- [expense-service] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+expense-service-1  | 2026-03-31T05:49:16.169Z  INFO 1 --- [expense-service] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+expense-service-1  | 2026-03-31T05:49:17.311Z  INFO 1 --- [expense-service] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+expense-service-1  | 2026-03-31T05:49:17.743Z  INFO 1 --- [expense-service] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+expense-service-1  | 2026-03-31T05:49:21.240Z  INFO 1 --- [expense-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+expense-service-1  | 2026-03-31T05:49:30.063Z  INFO 1 --- [expense-service] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+expense-service-1  | 2026-03-31T05:49:30.083Z  INFO 1 --- [expense-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+expense-service-1  | 2026-03-31T05:49:38.881Z  INFO 1 --- [expense-service] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+expense-service-1  | 2026-03-31T05:49:49.622Z  INFO 1 --- [expense-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+expense-service-1  | 2026-03-31T05:49:53.650Z  INFO 1 --- [expense-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+expense-service-1  | 2026-03-31T05:49:53.727Z  INFO 1 --- [expense-service] [           main] i.s.e.ExpenseServiceApplication          : Started ExpenseServiceApplication in 87.694 seconds (process running for 91.052)
+expense-service-1  | 2026-03-31T05:49:54.858Z  INFO 1 --- [expense-service] [           main] i.s.expense.config.DataInitializer       : Demo users already exist, skipping
