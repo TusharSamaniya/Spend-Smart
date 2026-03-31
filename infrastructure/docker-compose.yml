@@ -22,7 +22,6 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
       AWS_REGION: ${AWS_REGION}
-      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL}
       AWS_SQS_QUEUE_URL: ${AWS_SQS_QUEUE_URL}
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: ${MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE}
     ports:
@@ -32,8 +31,6 @@ services:
         condition: service_started
       redis:
         condition: service_started
-      localstack-init:
-        condition: service_completed_successfully
 
   ocr-service:
     build:
@@ -49,13 +46,10 @@ services:
       DB_PASSWORD: postgres
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_FLYWAY_LOCATIONS: classpath:db/migration
-      AWS_REGION: ap-south-1
-      AWS_ENDPOINT_URL: http://localstack:4566
-      AWS_S3_BUCKET_NAME: spendsmart-receipts
-      AWS_SQS_QUEUE_URL: http://localstack:4566/000000000000/ocr-queue
-      AWS_SNS_RECEIPT_EVENTS_TOPIC_ARN: arn:aws:sns:ap-south-1:000000000000:receipt-events
-      AWS_ACCESS_KEY_ID: test
-      AWS_SECRET_ACCESS_KEY: test
+      AWS_REGION: ${AWS_REGION}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      AWS_SQS_QUEUE_URL: ${AWS_SQS_QUEUE_OCR}
+      AWS_SNS_RECEIPT_EVENTS_TOPIC_ARN: ${AWS_SNS_RECEIPT_EVENTS_TOPIC_ARN}
       GOOGLE_DOCUMENT_AI_PROJECT_ID: ${GOOGLE_DOCUMENT_AI_PROJECT_ID}
       GOOGLE_DOCUMENT_AI_LOCATION: ${GOOGLE_DOCUMENT_AI_LOCATION:-us}
       GOOGLE_DOCUMENT_AI_PROCESSOR_ID: ${GOOGLE_DOCUMENT_AI_PROCESSOR_ID}
@@ -66,27 +60,20 @@ services:
         condition: service_started
       redis:
         condition: service_started
-      localstack-init:
-        condition: service_completed_successfully
 
   categorization-service:
     build:
       context: ../services/categorization-service
       dockerfile: Dockerfile
     environment:
-      SQS_QUEUE_URL: http://localstack:4566/000000000000/expense-created
-      SQS_ENDPOINT_URL: http://localstack:4566
-      AWS_REGION: ap-south-1
-      AWS_ACCESS_KEY_ID: test
-      AWS_SECRET_ACCESS_KEY: test
+      SQS_QUEUE_URL: ${AWS_SQS_QUEUE_CATEGORIZATION}
+      AWS_REGION: ${AWS_REGION}
       EXPENSE_SERVICE_URL: http://expense-service:8081
     ports:
       - "8083:8083"
     depends_on:
       expense-service:
         condition: service_started
-      localstack-init:
-        condition: service_completed_successfully
 
   upi-service:
     build:
@@ -105,9 +92,8 @@ services:
       SPRING_FLYWAY_LOCATIONS: classpath:db/migration
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
-      AWS_REGION: ap-south-1
-      AWS_ENDPOINT_URL: http://localstack:4566
-      AWS_SQS_QUEUE_URL: http://localstack:4566/000000000000/upi-events
+      AWS_REGION: ${AWS_REGION}
+      AWS_SQS_QUEUE_URL: ${AWS_SQS_QUEUE_UPI}
       WEBHOOK_SIGNATURE_SECRET: upi-test-secret
     ports:
       - "8084:8084"
@@ -120,8 +106,6 @@ services:
         condition: service_started
       categorization-service:
         condition: service_started
-      localstack-init:
-        condition: service_completed_successfully
 
   gst-service:
     build:
@@ -161,12 +145,9 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       JWT_SECRET: ${JWT_SECRET}
-      AWS_REGION: ap-south-1
-      AWS_ENDPOINT_URL: http://localstack:4566
-      AWS_ACCESS_KEY_ID: test
-      AWS_SECRET_ACCESS_KEY: test
-      AWS_SQS_EXPENSE_SUBMITTED_QUEUE_URL: http://localstack:4566/000000000000/expense-events
-      AWS_SQS_QUEUE_URL: http://localstack:4566/000000000000/expense-events
+      AWS_REGION: ${AWS_REGION}
+      AWS_SQS_EXPENSE_SUBMITTED_QUEUE_URL: ${AWS_SQS_QUEUE_EXPENSE_SUBMITTED}
+      AWS_SQS_QUEUE_URL: ${AWS_SQS_QUEUE_EXPENSE_EVENTS}
       EXPENSE_SERVICE_URL: http://expense-service:8081
       NOTIFICATION_SERVICE_URL: http://notification-service:8088
     ports:
@@ -176,8 +157,6 @@ services:
         condition: service_started
       postgres:
         condition: service_started
-      localstack-init:
-        condition: service_completed_successfully
 
   analytics-service:
     build:
@@ -195,12 +174,9 @@ services:
       DB_PASSWORD: postgres
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
-      AWS_REGION: ap-south-1
-      AWS_ENDPOINT_URL: http://localstack:4566
-      AWS_ACCESS_KEY_ID: test
-      AWS_SECRET_ACCESS_KEY: test
-      AWS_SNS_EXPENSE_EVENTS_TOPIC_ARN: arn:aws:sns:ap-south-1:000000000000:expense-events
-      AWS_SNS_ANOMALY_ALERT_TOPIC_ARN: arn:aws:sns:ap-south-1:000000000000:anomaly-alerts
+      AWS_REGION: ${AWS_REGION}
+      AWS_SNS_EXPENSE_EVENTS_TOPIC_ARN: ${AWS_SNS_EXPENSE_EVENTS_TOPIC_ARN}
+      AWS_SNS_ANOMALY_ALERT_TOPIC_ARN: ${AWS_SNS_ANOMALY_ALERT_TOPIC_ARN}
     ports:
       - "8087:8087"
     depends_on:
@@ -210,8 +186,6 @@ services:
         condition: service_started
       redis:
         condition: service_started
-      localstack-init:
-        condition: service_completed_successfully
 
   notification-service:
     build:
@@ -226,18 +200,13 @@ services:
       WHATSAPP_TOKEN: ${WHATSAPP_TOKEN:-}
       WHATSAPP_PHONE_ID: ${WHATSAPP_PHONE_ID:-}
       FIREBASE_CREDENTIALS_PATH: ${FIREBASE_CREDENTIALS_PATH:-}
-      AWS_SQS_NOTIFICATIONS_QUEUE_URL: ${AWS_SQS_NOTIFICATIONS_QUEUE_URL:-http://localstack:4566/000000000000/notifications}
-      AWS_REGION: ${AWS_REGION:-ap-south-1}
-      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://localstack:4566}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-test}
+      AWS_SQS_NOTIFICATIONS_QUEUE_URL: ${AWS_SQS_QUEUE_NOTIFICATIONS}
+      AWS_REGION: ${AWS_REGION}
     ports:
       - "8088:8088"
     depends_on:
       expense-service:
         condition: service_started
-      localstack-init:
-        condition: service_completed_successfully
 
   api-gateway:
     build:
@@ -294,36 +263,6 @@ services:
     container_name: spendsmart-redis
     image: redis:7-alpine
 
-  localstack:
-    image: localstack/localstack:3
-    environment:
-      SERVICES: s3,sqs,sns,secretsmanager
-      DEFAULT_REGION: ap-south-1
-      AWS_DEFAULT_REGION: ap-south-1
-    volumes:
-      - localstack_data:/var/lib/localstack
-      - ./scripts:/scripts:ro
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 15
-      start_period: 10s
-
-  localstack-init:
-    image: amazon/aws-cli:latest
-    depends_on:
-      localstack:
-        condition: service_healthy
-    volumes:
-      - ./scripts:/scripts:ro
-    environment:
-      AWS_ACCESS_KEY_ID: test
-      AWS_SECRET_ACCESS_KEY: test
-      AWS_DEFAULT_REGION: ap-south-1
-      LOCALSTACK_HOST: localstack
-    entrypoint: ["/bin/bash", "/scripts/init-localstack.sh"]
-
   elasticsearch:
     image: elasticsearch:8.13.0
     environment:
@@ -335,5 +274,4 @@ services:
 
 volumes:
   postgres_data:
-  localstack_data:
   elasticsearch_data:
